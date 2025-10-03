@@ -1,0 +1,502 @@
+/* Variables CSS */
+:root {
+    --primary: #52B69A;
+    --primary-dark: #409c80;
+    --secondary: #7209b7;
+    --accent: #f72585;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --gray: #6c757d;
+    --gray-light: #e9ecef;
+    --success: #4cc9f0;
+    --warning: #f8961e;
+    --danger: #f94144;
+    --border-radius: 12px;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+/* Reset y base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2B6777 0%, #764ba2 100%);
+    color: var(--dark);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Layout principal */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Sidebar desplegable */
+.sidebar {
+    width: 280px;
+    background: rgba(255, 255, 255, 0.98);
+    padding: 2rem 1.5rem;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    position: relative;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
+    width: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--gray-light);
+}
+
+.sidebar-header h2 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.toggle-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.toggle-btn:hover {
+    background: var(--primary-dark);
+    transform: rotate(90deg);
+}
+
+.category-list {
+    list-style: none;
+}
+
+.category-item {
+    margin-bottom: 0.8rem;
+}
+
+.category-link {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    color: var(--dark);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    font-weight: 500;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.category-link:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateX(5px);
+}
+
+.category-link i {
+    margin-right: 0.8rem;
+    font-size: 1.1rem;
+}
+
+/* Boton para mostrar sidebar */
+.sidebar-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    display: flex;
+}
+
+.sidebar-toggle:hover {
+    background: var(--primary-dark);
+    transform: scale(1.1);
+}
+
+/* Ocultar boton cuando sidebar esta visible en desktop */
+@media (min-width: 769px) {
+    .sidebar-toggle {
+        display: none;
+    }
+
+    .sidebar:not(.collapsed) ~ .main-content .sidebar-toggle {
+        display: none;
+    }
+}
+
+/* Mostrar boton cuando sidebar esta oculto en desktop */
+@media (min-width: 769px) {
+    .sidebar.collapsed ~ .main-content .sidebar-toggle {
+        display: flex;
+    }
+}
+
+/* Contenido principal */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Header mejorado */
+.main-header {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.header-title {
+    color: var(--primary);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+.search-container {
+    display: flex;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: 2px solid var(--gray-light);
+    border-radius: 50px;
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(82, 182, 154, 0.1);
+}
+
+.search-btn {
+    padding: 1rem 2rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.search-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(82, 182, 154, 0.3);
+}
+
+/* Grid de productos mejorado */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.product-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.product-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--accent);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 10;
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(45deg, var(--gray-light), var(--light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray);
+}
+
+.product-image i {
+    font-size: 3rem;
+}
+
+.product-info {
+    padding: 1.5rem;
+}
+
+.product-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+}
+
+.product-description {
+    color: var(--gray);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.product-stock {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+}
+
+.stock-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.stock-high {
+    background: rgba(76, 201, 240, 0.2);
+    color: var(--success);
+}
+
+.stock-low {
+    background: rgba(248, 150, 30, 0.2);
+    color: var(--warning);
+}
+
+.stock-none {
+    background: rgba(249, 65, 68, 0.2);
+    color: var(--danger);
+}
+
+.product-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+    background: var(--gray);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* Estilos para los iconos de los botones */
+.product-actions .btn::before {
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.product-actions .btn[data-icon="cart-plus"]::before {
+    content: "\f217";
+}
+
+.product-actions .btn[data-icon="info"]::before {
+    content: "\f05a";
+}
+
+/* Asegurar que los botones tengan el mismo tamaño */
+.product-actions .btn {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+/* Estilos especificos para botones deshabilitados */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Overlay para moviles */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: fixed;
+        height: 100vh;
+        transform: translateX(-100%);
+        z-index: 1000;
+    }
+
+    .sidebar:not(.collapsed) {
+        transform: translateX(0);
+    }
+
+    .sidebar-toggle {
+        display: flex;
+        z-index: 1001;
+    }
+
+    .main-content {
+        width: 100%;
+    }
+
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-container {
+        flex-direction: column;
+    }
+
+    .sidebar-overlay {
+        display: block;
+    }
+
+    /* Ocultar boton cuando sidebar esta visible en mobile */
+    .sidebar:not(.collapsed) ~ .main-content .sidebar-toggle {
+        display: none;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease-out;
+}

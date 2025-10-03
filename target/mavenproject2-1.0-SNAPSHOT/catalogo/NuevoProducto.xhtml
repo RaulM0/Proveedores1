@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Registro de Productos</title>
+        <h:outputStylesheet name="css/estilos_registro.css"/>
+
+        <!-- Favicon temporal desde CDN -->
+        <link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/box.svg" />
+    </h:head>
+    <h:body>
+        <div class="ventana-completa">
+
+            <!-- Cabecera -->
+            <div class="cabecera">
+                <h:outputText value="Registro de Productos"/>
+            </div>
+
+            <h:form id="registroForm">
+                <div class="contenido">
+
+                    <!-- Botón Volver -->
+                    <h:commandButton value="Volver" action="navegacion-volver" styleClass="btn-volver"/>
+
+                    <!-- Fila de metadatos -->
+                    <div class="fila-metadata">
+                        <div class="meta-izq">
+                            <h:outputText value="Fecha Creación:" styleClass="label-meta"/>
+                            <h:outputText value="#{productoBean.fechaCreacion}" styleClass="valor-meta"/>
+                        </div>
+                        <div class="meta-der">
+                            <h:outputText value="Código Producto:" styleClass="label-meta"/>
+                            <h:outputText value="#{productoBean.codigoProducto}" styleClass="valor-meta"/>
+                        </div>
+                    </div>
+                    <!-- Dos columnas de campos -->
+                    <div class="contenedor-campos">
+
+                        <!-- Columna Izquierda -->
+                        <div class="columna">
+
+                            <div class="campo">
+                                <h:outputLabel value="Nombre:" for="nombre"/>
+                                <h:inputText id="nombre" value="#{productoBean.nombre}"/>
+                            </div>
+
+                            <div class="campo">
+                                <h:outputLabel value="Marca:" for="marca"/>
+                                <h:inputText id="marca" value="#{productoBean.marca}"/>
+                            </div>
+
+                            <div class="campo">
+                                <h:outputLabel value="Categoría:" for="categoria"/>
+                                <h:selectOneMenu id="categoria" value="#{productoBean.categoria}">
+                                    <f:selectItem itemLabel="Categoria" itemValue="Categoria"/>
+                                </h:selectOneMenu>
+                            </div>
+
+                            <div class="campo">
+                                <h:outputLabel value="Precio Compra:" for="precioCompra"/>
+                                <h:inputText id="precioCompra" value="#{productoBean.precioCompra}"/>
+                            </div>
+
+                            <!-- Fecha Actualización -->
+                            <div class="fecha-actualizacion">
+                                <h:outputText value="Fecha Actualización:" styleClass="label-meta"/>
+                                <h:outputText value="#{productoBean.fechaActualizacion}" styleClass="valor-meta"/>
+                            </div>
+
+                        </div>
+
+                        <!-- Columna Derecha -->
+                        <div class="columna">
+
+                            <div class="campo">
+                                <h:outputLabel value="Precio Venta:" for="precioVenta"/>
+                                <h:inputText id="precioVenta" value="#{productoBean.precioVenta}"/>
+                            </div>
+
+                            <div class="campo campo-area">
+                                <h:outputLabel value="Características:" for="caracteristicas"/>
+                                <h:inputTextarea id="caracteristicas" value="#{productoBean.caracteristicas}" rows="4"/>
+                            </div>
+
+                            <div class="campo">
+                                <h:outputLabel value="Estatus:" for="estatus"/>
+                                <h:selectOneMenu id="estatus" value="#{productoBean.estatus}" styleClass="select-pequeno">
+                                    <f:selectItem itemLabel="Activo" itemValue="Activo"/>
+                                </h:selectOneMenu>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Botones finales -->
+                    <div class="contenedor-botones">
+                        <h:commandButton value="Cancelar" action="cancelarRegistro" immediate="true" styleClass="btn-cancelar"/>
+                        <h:commandButton value="Registrar Producto" action="#{productoBean.registrarProducto}" styleClass="btn-registrar"/>
+                    </div>
+
+                </div>
+            </h:form>
+        </div>
+    </h:body>
+</html>
