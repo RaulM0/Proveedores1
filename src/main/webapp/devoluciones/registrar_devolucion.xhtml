@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Realizar Devolución</title>
+        <h:outputStylesheet library="css" name="devolucion.css"/>
+    </h:head>
+
+    <h:body>
+        <div class="container">
+            <div class="header">
+                <h1>Realizar devolución</h1>
+            </div>
+
+            <h:form id="devolucionForm">
+                <div class="content">
+                    <!-- ID Devolución -->
+                    <div class="devolucion-id">
+                        <span class="label-id">ID Devolución:</span>
+                        <span class="value-id">#{devolucionBean.devolucionId}</span>
+
+                        <h:commandButton value="Volver" 
+                                         action="#{devolucionBean.volver}"
+                                         styleClass="btn-volver"/>
+                    </div>
+
+                    <div class="form-layout">
+                        <!-- Columna Izquierda -->
+                        <div class="left-column">
+                            <!-- ID Venta -->
+                            <div class="form-group">
+                                <h:outputLabel value="ID Venta:" for="ventaId" styleClass="form-label"/>
+                                <h:inputText id="ventaId" 
+                                             value="#{devolucionBean.ventaId}"
+                                             styleClass="form-input"
+                                             required="true"
+                                             requiredMessage="ID Venta es requerido"/>
+                            </div>
+
+                            <!-- Lista de Productos -->
+                            <div class="form-group productos-group">
+                                <h:outputLabel value="Productos(s):" styleClass="form-label"/>
+
+                                <div class="productos-list">
+                                    <h:selectManyCheckbox value="#{devolucionBean.productosSeleccionados}"
+                                                          layout="pageDirection"
+                                                          styleClass="checkbox-list">
+                                        <f:selectItems value="#{devolucionBean.productos}"
+                                                       var="prod"
+                                                       itemValue="#{prod.id}"
+                                                       itemLabel="#{prod.nombre} - Cantidad: #{prod.cantidad}"/>
+                                    </h:selectManyCheckbox>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Columna Derecha -->
+                        <div class="right-column">
+                            <!-- Fecha -->
+                            <div class="form-group">
+                                <h:outputLabel value="Fecha:" styleClass="form-label"/>
+                                <h:outputText value="#{devolucionBean.fecha}"
+                                              styleClass="fecha-value">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </div>
+
+                            <!-- Motivo -->
+                            <div class="form-group motivo-group">
+                                <h:outputLabel value="Motivo:" for="motivo" styleClass="form-label"/>
+                                <h:inputTextarea id="motivo"
+                                                 value="#{devolucionBean.motivo}"
+                                                 rows="5"
+                                                 cols="40"
+                                                 styleClass="form-textarea"
+                                                 required="true"
+                                                 requiredMessage="Motivo es requerido"/>
+                            </div>
+
+                            <!-- Estado -->
+                            <div class="form-group">
+                                <h:outputLabel value="Estado:" for="estado" styleClass="form-label"/>
+                                <h:selectOneMenu id="estado"
+                                                 value="#{devolucionBean.estado}"
+                                                 styleClass="form-select"
+                                                 required="true"
+                                                 requiredMessage="Estado es requerido">
+                                    <f:selectItem itemLabel="Seleccione..." itemValue=""/>
+                                    <f:selectItem itemLabel="Pendiente" itemValue="Pendiente"/>
+                                    <f:selectItem itemLabel="Aprobada" itemValue="Aprobada"/>
+                                    <f:selectItem itemLabel="Rechazada" itemValue="Rechazada"/>
+                                    <f:selectItem itemLabel="Procesada" itemValue="Procesada"/>
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="action-buttons">
+                        <h:commandButton value="Cancelar"
+                                         action="#{devolucionBean.cancelar}"
+                                         styleClass="btn-cancelar"
+                                         immediate="true"/>
+
+                        <h:commandButton value="Realizar Devolucion"
+                                         action="#{devolucionBean.realizarDevolucion}"
+                                         styleClass="btn-realizar"/>
+                    </div>
+
+                    <!-- Mensajes de validación -->
+                    <h:messages styleClass="messages" 
+                                errorClass="error-message"
+                                infoClass="info-message"
+                                globalOnly="false"/>
+                </div>
+            </h:form>
+        </div>
+    </h:body>
+</html>
