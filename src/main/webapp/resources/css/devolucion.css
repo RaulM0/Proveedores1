@@ -1,0 +1,519 @@
+/* ======================================= */
+/* RESET Y BASE */
+/* ======================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2B6777 0%, #52B69A 100%);
+    color: #212529;
+}
+
+/* ======================================= */
+/* VENTANA COMPLETA - FIXED */
+/* ======================================= */
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/* ======================================= */
+/* CABECERA MEJORADA */
+/* ======================================= */
+
+.header {
+    background: linear-gradient(135deg, #2B6777 0%, #52B69A 100%);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 1.8em;
+    font-weight: 700;
+    border-bottom: none;
+    flex-shrink: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 100;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1em;
+    font-weight: 700;
+}
+
+/* ======================================= */
+/* CONTENIDO CON SCROLL FUNCIONAL */
+/* ======================================= */
+
+.content {
+    flex: 1;
+    padding: 25px 40px;
+    position: relative;
+    overflow-y: auto;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* ======================================= */
+/* BOTÓN VOLVER CORREGIDO - POSICIÓN SEGURA */
+/* ======================================= */
+
+.btn-volver {
+    position: absolute;
+    top: 25px;
+    right: 40px;
+    padding: 10px 25px;
+    background: #2B6777;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-volver:hover {
+    background: #52B69A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ======================================= */
+/* FILA DE METADATOS MEJORADA */
+/* ======================================= */
+
+.devolucion-id {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #52B69A;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.label-id {
+    font-size: 0.85em;
+    color: #6c757d;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.value-id {
+    font-weight: 700;
+    font-size: 1em;
+    color: #2B6777;
+}
+
+/* ======================================= */
+/* CONTENEDOR DE CAMPOS MEJORADO */
+/* ======================================= */
+
+.form-layout {
+    display: flex;
+    gap: 50px;
+    margin-bottom: 25px;
+    padding: 25px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.left-column,
+.right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ======================================= */
+/* CAMPOS MEJORADOS */
+/* ======================================= */
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 50px;
+}
+
+.form-group.motivo-group,
+.form-group.productos-group {
+    align-items: flex-start;
+    flex: 1;
+}
+
+.form-label {
+    min-width: 120px;
+    text-align: right;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #2B6777;
+}
+
+.motivo-group .form-label,
+.productos-group .form-label {
+    padding-top: 10px;
+}
+
+/* ======================================= */
+/* INPUTS MEJORADOS */
+/* ======================================= */
+
+.form-input,
+.form-select,
+.form-textarea {
+    padding: 10px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    background: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #52B69A;
+    box-shadow: 0 0 0 3px rgba(82, 182, 154, 0.1);
+}
+
+.form-input,
+.form-select {
+    width: 220px;
+    min-width: 220px;
+}
+
+.form-textarea {
+    width: 220px;
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+}
+
+.form-select {
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=UTF-8,<svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L6 6L11 1" stroke="%232B6777" stroke-width="2" stroke-linecap="round"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 35px;
+    cursor: pointer;
+}
+
+.fecha-value {
+    padding: 10px;
+    font-size: 0.95em;
+    color: #2B6777;
+    font-weight: 600;
+}
+
+/* ======================================= */
+/* LISTA DE PRODUCTOS */
+/* ======================================= */
+
+.productos-list {
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    padding: 15px;
+    background-color: white;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 150px;
+}
+
+.checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkbox-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.checkbox-list td {
+    padding: 10px 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.checkbox-list td:first-child {
+    width: 30px;
+}
+
+.checkbox-list tr:last-child td {
+    border-bottom: none;
+}
+
+.checkbox-list input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #52B69A;
+}
+
+.checkbox-list label {
+    font-size: 0.95em;
+    color: #212529;
+    cursor: pointer;
+}
+
+/* ======================================= */
+/* BOTONES FINALES - SIEMPRE VISIBLES */
+/* ======================================= */
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 25px 0;
+    background: #f8f9fa;
+    border-top: 2px solid #e9ecef;
+    margin-top: auto;
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+}
+
+.btn-cancelar,
+.btn-realizar {
+    padding: 12px 35px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    min-width: 180px;
+    transition: all 0.3s ease;
+}
+
+.btn-cancelar {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-realizar {
+    background: #52B69A;
+    color: white;
+}
+
+.btn-realizar:hover {
+    background: #409c80;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ======================================= */
+/* MENSAJES */
+/* ======================================= */
+
+.messages {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.error-message {
+    color: #dc3545;
+    background-color: #f8d7da;
+    padding: 12px;
+    border-left: 4px solid #dc3545;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+.info-message {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    padding: 12px;
+    border-left: 4px solid #17a2b8;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+.error-message ul,
+.info-message ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.error-message li,
+.info-message li {
+    margin: 5px 0;
+}
+
+/* ======================================= */
+/* SCROLLBAR FUNCIONAL */
+/* ======================================= */
+
+.content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: #52B69A;
+    border-radius: 4px;
+}
+
+.form-layout::-webkit-scrollbar {
+    width: 6px;
+}
+
+.form-layout::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 3px;
+}
+
+.form-layout::-webkit-scrollbar-thumb {
+    background: #2B6777;
+    border-radius: 3px;
+}
+
+.productos-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.productos-list::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 3px;
+}
+
+.productos-list::-webkit-scrollbar-thumb {
+    background: #52B69A;
+    border-radius: 3px;
+}
+
+/* ======================================= */
+/* RESPONSIVE */
+/* ======================================= */
+
+@media (max-width: 900px) {
+    .form-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .devolucion-id {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .btn-cancelar,
+    .btn-realizar {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .header {
+        font-size: 1.4em;
+        padding: 15px;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .btn-volver {
+        position: relative;
+        top: auto;
+        right: auto;
+        align-self: flex-end;
+        margin-bottom: 15px;
+        width: auto;
+        z-index: 1000;
+    }
+
+    .form-input,
+    .form-select {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .form-textarea {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        padding: 15px;
+    }
+
+    .form-layout,
+    .devolucion-id {
+        padding: 15px;
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .form-label {
+        min-width: auto;
+        text-align: left;
+    }
+
+    .btn-volver {
+        width: 100%;
+        text-align: center;
+    }
+}
