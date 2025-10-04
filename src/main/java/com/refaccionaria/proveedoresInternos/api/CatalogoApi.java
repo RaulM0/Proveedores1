@@ -12,6 +12,7 @@ import java.util.List;
 /**
  *
  * @author RMD
+ * http://localhost:8080/mavenproject2/api/catalogo
  */
 @Path("/catalogo") //Ruta del endpoint
 public class CatalogoApi {
