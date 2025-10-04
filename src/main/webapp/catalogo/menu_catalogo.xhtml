@@ -1,0 +1,705 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <head>
+        <title>Catálogo de Productos - Refaccionaria</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style>
+            /* ===== RESET Y BASE ===== */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f8f9fa;
+                color: #333;
+                line-height: 1.6;
+                min-height: 100vh;
+            }
+
+            /* ===== BARRA DE NAVEGACIÓN ===== */
+            .navbar {
+                background: #2c3e50;
+                padding: 0 30px;
+                border-bottom: 3px solid #3498db;
+            }
+
+            .navbar-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 70px;
+            }
+
+            .logo-section {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .company-logo {
+                width: 40px;
+                height: 40px;
+                background: #3498db;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                font-size: 1.2rem;
+            }
+
+            .company-name {
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: white;
+                letter-spacing: -0.5px;
+            }
+
+            .navbar-menu {
+                display: flex;
+                align-items: center;
+                gap: 25px;
+            }
+
+            .nav-link {
+                text-decoration: none;
+                color: #ecf0f1;
+                font-weight: 500;
+                padding: 8px 16px;
+                border-radius: 4px;
+                transition: all 0.3s ease;
+            }
+
+            .nav-link:hover {
+                background: #34495e;
+                color: #3498db;
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: #ecf0f1;
+                font-size: 0.9rem;
+            }
+
+            .user-avatar {
+                width: 35px;
+                height: 35px;
+                background: #3498db;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+            }
+
+            .logout-btn {
+                background: #e74c3c;
+                color: white;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 0.9rem;
+                transition: all 0.3s ease;
+                text-decoration: none;
+                display: inline-block;
+            }
+
+            .logout-btn:hover {
+                background: #c0392b;
+            }
+
+            /* ===== CONTENEDOR PRINCIPAL ===== */
+            .catalogo-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 40px 20px;
+            }
+
+            /* ===== CABECERA ===== */
+            .catalogo-header {
+                text-align: center;
+                margin-bottom: 50px;
+                padding: 30px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                border-left: 4px solid #3498db;
+            }
+
+            .catalogo-title {
+                font-size: 2.2rem;
+                font-weight: 600;
+                margin-bottom: 15px;
+                color: #2c3e50;
+            }
+
+            .catalogo-subtitle {
+                font-size: 1.1rem;
+                color: #7f8c8d;
+                max-width: 600px;
+                margin: 0 auto;
+                line-height: 1.6;
+            }
+
+            /* ===== ESTADÍSTICAS RÁPIDAS ===== */
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                margin-bottom: 40px;
+            }
+
+            .stat-card {
+                background: white;
+                padding: 25px;
+                border-radius: 6px;
+                text-align: center;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                border-top: 4px solid #3498db;
+            }
+
+            .stat-number {
+                font-size: 2.2rem;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 5px;
+            }
+
+            .stat-label {
+                color: #7f8c8d;
+                font-size: 0.9rem;
+                font-weight: 500;
+            }
+
+            /* ===== GRID DE OPCIONES PRINCIPALES ===== */
+            .options-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 25px;
+                margin-bottom: 40px;
+            }
+
+            .option-card {
+                background: white;
+                border-radius: 8px;
+                padding: 35px 30px;
+                text-align: center;
+                box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+                transition: all 0.3s ease;
+                border: 1px solid #e9ecef;
+                position: relative;
+            }
+
+            .option-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+                border-color: #3498db;
+            }
+
+            .option-icon {
+                font-size: 3rem;
+                margin-bottom: 20px;
+                display: block;
+                color: #3498db;
+            }
+
+            .option-card h3 {
+                font-size: 1.4rem;
+                margin-bottom: 15px;
+                color: #2c3e50;
+                font-weight: 600;
+            }
+
+            .option-card p {
+                color: #7f8c8d;
+                margin-bottom: 25px;
+                line-height: 1.5;
+                font-size: 0.95rem;
+            }
+
+            .option-btn {
+                display: inline-block;
+                padding: 12px 30px;
+                background: #3498db;
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                border: none;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+
+            .option-btn:hover {
+                background: #2980b9;
+            }
+
+            /* ===== OPCIONES SECUNDARIAS ===== */
+            .secondary-section {
+                background: white;
+                padding: 30px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                margin-bottom: 30px;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+                color: #2c3e50;
+                margin-bottom: 25px;
+                font-weight: 600;
+                border-bottom: 2px solid #ecf0f1;
+                padding-bottom: 10px;
+            }
+
+            .secondary-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+            }
+
+            .secondary-card {
+                background: #f8f9fa;
+                padding: 20px;
+                border-radius: 6px;
+                text-align: center;
+                transition: all 0.3s ease;
+                border: 1px solid #e9ecef;
+            }
+
+            .secondary-card:hover {
+                border-color: #3498db;
+                background: white;
+            }
+
+            .secondary-icon {
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+                color: #3498db;
+            }
+
+            .secondary-card h4 {
+                margin-bottom: 10px;
+                color: #2c3e50;
+                font-weight: 600;
+                font-size: 1rem;
+            }
+
+            .secondary-link {
+                color: #3498db;
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 0.9rem;
+                transition: all 0.3s ease;
+            }
+
+            .secondary-link:hover {
+                color: #2980b9;
+                text-decoration: underline;
+            }
+
+            /* ===== ACCIONES RÁPIDAS ===== */
+            .quick-actions {
+                background: white;
+                padding: 25px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+
+            .actions-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .action-btn {
+                padding: 12px 15px;
+                background: #ecf0f1;
+                border: 1px solid #bdc3c7;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                text-align: center;
+                color: #2c3e50;
+                text-decoration: none;
+                display: block;
+            }
+
+            .action-btn:hover {
+                background: #3498db;
+                color: white;
+                border-color: #3498db;
+            }
+
+            /* ===== RESPONSIVE ===== */
+            @media (max-width: 768px) {
+                .navbar-container {
+                    padding: 0 20px;
+                    height: 60px;
+                }
+
+                .company-name {
+                    font-size: 1.2rem;
+                }
+
+                .nav-link {
+                    display: none;
+                }
+
+                .catalogo-title {
+                    font-size: 1.8rem;
+                }
+
+                .options-grid {
+                    grid-template-columns: 1fr;
+                    gap: 20px;
+                }
+
+                .option-card {
+                    padding: 25px 20px;
+                }
+
+                .secondary-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media (max-width: 480px) {
+                .catalogo-container {
+                    padding: 20px 15px;
+                }
+
+                .catalogo-title {
+                    font-size: 1.6rem;
+                }
+
+                .stats-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .secondary-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .actions-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            /* ======================================= */
+            /* BARRA DE NAVEGACIÓN SUPERIOR */
+            /* ======================================= */
+
+            .navbar {
+                width: 100%;
+                height: 60px;
+                background: linear-gradient(135deg, #1a4d5c 0%, #2B6777 100%);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 30px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 1000;
+            }
+
+            .navbar-brand {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                color: white;
+                font-weight: 600;
+                font-size: 1.1em;
+            }
+
+            .brand-icon {
+                font-size: 1.5em;
+            }
+
+            .brand-name {
+                letter-spacing: 0.5px;
+            }
+            .navbar-menu {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .user-menu {
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: white;
+                padding: 8px 15px;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .user-menu:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .user-icon {
+                font-size: 1.3em;
+            }
+
+            .user-name {
+                font-weight: 500;
+                font-size: 0.95em;
+            }
+
+            .dropdown-menu {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                margin-top: 10px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+                min-width: 200px;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.3s ease;
+                z-index: 1001;
+            }
+
+            .user-menu:hover .dropdown-menu {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .dropdown-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 20px;
+                color: #333;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                font-size: 0.95em;
+                border: none;
+                background: transparent;
+                width: 100%;
+                text-align: left;
+                cursor: pointer;
+            }
+
+            .dropdown-item:first-child {
+                border-radius: 8px 8px 0 0;
+            }
+
+            .dropdown-item:last-child {
+                border-radius: 0 0 8px 8px;
+            }
+
+            .dropdown-item:hover {
+                background: #f8f9fa;
+            }
+
+            .dropdown-item.logout {
+                color: #dc3545;
+            }
+
+            .dropdown-item.logout:hover {
+                background: #fff5f5;
+            }
+
+            .dropdown-icon {
+                font-size: 1.1em;
+            }
+
+            .dropdown-divider {
+                height: 1px;
+                background: #e9ecef;
+                margin: 5px 0;
+            }
+            /* Estilo para links tipo botón en navbar */
+            .navbar-brand .btn-volver {
+                display: inline-block;
+                padding: 0.5rem 1rem;
+                background-color: #2B6777; /* Color principal */
+                color: white;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 0.9rem;
+                transition: all 0.3s ease;
+                margin-left: 1rem; /* Separación del texto de marca */
+            }
+
+            .navbar-brand .btn-volver:hover {
+                background-color: #3a56d4; /* Color más oscuro al pasar el mouse */
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+        </style>
+    </head>
+    <body>
+        <!-- Barra de Navegación -->
+        <!-- Barra de Navegación Superior -->
+        <div class="navbar">
+            <div class="navbar-brand">
+                <span class="brand-icon">🏢</span>
+                <span class="brand-name">Sistema de Gestión Proveedores</span>
+                <a href="../dashboard.xhtml" class="btn-volver">Inicio</a>
+
+            </div>
+            <div class="navbar-menu">
+                <div class="user-menu">
+                    <span class="user-icon">👤</span>
+                    <span class="user-name">#{sessionBean.nombreUsuario}</span>
+                    <div class="dropdown-menu">
+                        <h:form>
+                            <h:commandLink action="#{sessionBean.miCuenta}" styleClass="dropdown-item">
+                                <span class="dropdown-icon">⚙️</span> Mi Cuenta
+                            </h:commandLink>
+                            <h:commandLink action="#{sessionBean.configuracion}" styleClass="dropdown-item">
+                                <span class="dropdown-icon">🔧</span> Configuración
+                            </h:commandLink>
+                            <div class="dropdown-divider"></div>
+                            <h:commandLink action="#{sessionBean.logout}" styleClass="dropdown-item logout">
+                                <span class="dropdown-icon">🚪</span> Cerrar Sesión
+                            </h:commandLink>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  
+        <div class="navbar">
+            <div class="navbar-container">
+                <div class="logo-section">
+                    <div class="company-logo">R</div>
+                    <div class="company-name">Refaccionaria Industrial</div>
+                </div>
+
+                <div class="navbar-menu">
+                    <h:link value="Dashboard" outcome="dashboard" styleClass="nav-link"/>
+                    <h:link value="Catálogo" outcome="catalogo" styleClass="nav-link"/>
+                    <h:link value="Inventario" outcome="inventario" styleClass="nav-link"/>
+
+                    <div class="user-info">
+                        <div class="user-avatar">OP</div>
+                        <span>Operador</span>
+                    </div>
+                    <h:link value="Cerrar Sesión" outcome="logout" styleClass="logout-btn" />
+                </div>
+            </div>
+        </div>
+        -->
+
+        <!-- Contenido Principal -->
+        <div class="catalogo-container">
+            <div class="catalogo-header">
+                <h1 class="catalogo-title">Gestión de Catálogo</h1>
+                <p class="catalogo-subtitle">Administre el inventario de refacciones y productos del almacén</p>
+            </div>
+
+            <!-- Estadísticas Rápidas -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">1,847</div>
+                    <div class="stat-label">Refacciones Activas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">42</div>
+                    <div class="stat-label">Categorías</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">18</div>
+                    <div class="stat-label">Stock Bajo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">56</div>
+                    <div class="stat-label">Nuevos Ingresos</div>
+                </div>
+            </div>
+
+            <!-- Opciones Principales -->
+            <div class="options-grid">
+                <div class="option-card">
+                    <span class="option-icon">📦</span>
+                    <h3>Agregar Refacción</h3>
+                    <p>Registre una nueva refacción en el sistema con código, especificaciones técnicas y datos de proveedor.</p>
+                    <!-- CORREGIDO: Usar h:link en lugar de h:button -->
+                    <h:link value="Agregar Producto" outcome="nuevo_producto" styleClass="option-btn" />
+
+                </div>
+
+                <div class="option-card">
+                    <span class="option-icon">✏️</span>
+                    <h3>Editar Productos</h3>
+                    <p>Actualice información de refacciones existentes, precios, stock y especificaciones técnicas.</p>
+                    <!-- CORREGIDO: Usar h:link en lugar de h:button -->
+                    <h:link value="Editar Productos" outcome="EditarProducto" styleClass="option-btn" />
+                </div>
+
+                <div class="option-card">
+                    <span class="option-icon">📋</span>
+                    <h3>Catálogo Completo</h3>
+                    <p>Consulte y administre todo el inventario de refacciones con filtros y búsqueda avanzada.</p>
+                    <!-- CORREGIDO: Usar h:link en lugar de h:button -->
+                    <h:link value="Ver Catálogo" outcome="catalogo" styleClass="option-btn" />
+                </div>
+            </div>
+
+            <!-- Gestión de Categorías -->
+            <div class="secondary-section">
+                <h3 class="section-title">Gestión de Categorías</h3>
+                <div class="secondary-grid">
+                    <div class="secondary-card">
+                        <span class="secondary-icon">📁</span>
+                        <h4>Categorías</h4>
+                        <h:link value="Administrar" outcome="gestionar-categorias" styleClass="secondary-link" />
+                    </div>
+                    <div class="secondary-card">
+                        <span class="secondary-icon">🏷️</span>
+                        <h4>Marcas</h4>
+                        <h:link value="Gestionar" outcome="gestionar-marcas" styleClass="secondary-link" />
+                    </div>
+                    <div class="secondary-card">
+                        <span class="secondary-icon">🔧</span>
+                        <h4>Aplicaciones</h4>
+                        <h:link value="Configurar" outcome="gestionar-aplicaciones" styleClass="secondary-link" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones Rápidas -->
+            <div class="quick-actions">
+                <h3 class="section-title">Acciones Rápidas</h3>
+                <div class="actions-grid">
+                    <h:link value="Consulta Rápida" outcome="consulta-rapida" styleClass="action-btn" />
+                    <h:link value="Stock Mínimo" outcome="stock-minimo" styleClass="action-btn" />
+                    <h:link value="Productos Nuevos" outcome="productos-nuevos" styleClass="action-btn" />
+                    <h:link value="Reporte Diario" outcome="reporte-diario" styleClass="action-btn" />
+                    <h:link value="Importar Datos" outcome="importar-datos" styleClass="action-btn" />
+                    <h:link value="Exportar Lista" outcome="exportar-lista" styleClass="action-btn" />
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

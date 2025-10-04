@@ -10,7 +10,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import java.io.Serializable;
 
-@Named
+@Named("loginBean")
 @SessionScoped
 public class LoginBean implements Serializable {
     
