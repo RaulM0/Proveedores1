@@ -1,4 +1,6 @@
 com\refaccionaria\proveedoresInternos\beans\ProductoBean.class
+com\refaccionaria\proveedoresInternos\api\CatalogoApi.class
+com\refaccionaria\proveedoresInternos\api\RestApplication.class
 com\refaccionaria\proveedoresInternos\models\Devolucion.class
 com\refaccionaria\proveedoresInternos\beans\LoginBean.class
 com\refaccionaria\proveedoresInternos\models\Pago.class

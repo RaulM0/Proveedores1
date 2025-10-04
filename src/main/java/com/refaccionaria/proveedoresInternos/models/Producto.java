@@ -1,5 +1,6 @@
 package com.refaccionaria.proveedoresInternos.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
  *
  * @author RMD
  */
-public class Producto {
+public class Producto implements Serializable{
     
     private String id;
     private String codigoProducto;
