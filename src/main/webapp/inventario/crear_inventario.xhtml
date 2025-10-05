@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Alta de Inventario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <h:outputStylesheet library="css" name="crearInventario.css" />
+</h:head>
+
+<h:body>
+    <header class="main-header">
+        <div class="logo">
+            <h1>Alta de Inventario</h1>
+        </div>
+        <nav class="main-nav">
+            <a href="dashboard_inventarios.xhtml" class="back-btn">Regresar</a>
+        </nav>
+    </header>
+    <div class="container">
+        <!-- ...existing code... -->
+        <h:form>
+            <div class="form-layout">
+                <div class="left-column">
+                    <div class="form-group">
+                        <h:outputLabel value="Producto:" for="productoId" styleClass="form-label" />
+                        <h:selectOneMenu id="productoId" value="#{inventarioBean.inventarioActual.productoId}"
+                            styleClass="form-input" required="true">
+                            <f:selectItem itemLabel="Seleccione un producto" itemValue="" />
+                            <f:selectItems value="#{catalogoBean.productos}" var="prod" itemValue="#{prod.id}"
+                                itemLabel="#{prod.nombre} (#{prod.id})" />
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Stock Inicial:" for="stock" styleClass="form-label" />
+                        <h:inputText id="stock" value="#{inventarioBean.inventarioActual.stock}" styleClass="form-input"
+                            required="true" />
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Ubicación:" for="ubicacion" styleClass="form-label" />
+                        <h:inputText id="ubicacion" value="#{inventarioBean.inventarioActual.ubicacion}"
+                            styleClass="form-input" />
+                    </div>
+                </div>
+                <div class="right-column">
+                    <div class="form-group">
+                        <h:outputLabel value="Mínimo en Stock:" for="minimo" styleClass="form-label" />
+                        <h:inputText id="minimo" value="#{inventarioBean.inventarioActual.minimo}"
+                            styleClass="form-input" />
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Máximo en Stock:" for="maximo" styleClass="form-label" />
+                        <h:inputText id="maximo" value="#{inventarioBean.inventarioActual.maximo}"
+                            styleClass="form-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="actions-grid">
+                <h:commandButton value="Registrar" action="#{inventarioBean.agregarInventario}"
+                    styleClass="action-btn" />
+            </div>
+        </h:form>
+    </div>
+</h:body>
+
+</html>

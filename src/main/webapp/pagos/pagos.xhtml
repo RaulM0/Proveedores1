@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Gestión de Pagos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <h:outputStylesheet library="css" name="pagos.css" />
+    <h:outputStylesheet library="css" name="estilos.css" />
+    <h:outputStylesheet library="css" name="dashboard.css" />
+    <h:outputStylesheet name="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</h:head>
+<h:body>
+    <!-- Barra de Navegación Superior Unificada -->
+    <div class="navbar">
+        <div class="navbar-brand">
+            <span class="brand-icon">🏢</span>
+            <span class="brand-name">Sistema de Gestión Proveedores</span>
+            <a href="../dashboard.xhtml" class="btn-volver">Inicio</a>
+        </div>
+        <div class="navbar-menu">
+            <div class="user-menu">
+                <span class="user-icon">👤</span>
+                <span class="user-name">#{sessionBean.nombreUsuario}</span>
+                <div class="dropdown-menu">
+                    <h:form>
+                        <h:commandLink action="#{sessionBean.miCuenta}" styleClass="dropdown-item">
+                            <span class="dropdown-icon">⚙️</span> Mi Cuenta
+                        </h:commandLink>
+                        <h:commandLink action="#{sessionBean.configuracion}" styleClass="dropdown-item">
+                            <span class="dropdown-icon">🔧</span> Configuración
+                        </h:commandLink>
+                        <div class="dropdown-divider"></div>
+                        <h:commandLink action="#{sessionBean.logout}" styleClass="dropdown-item logout">
+                            <span class="dropdown-icon">🚪</span> Cerrar Sesión
+                        </h:commandLink>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="filters-card">
+            <div class="filter-group">
+                <h:outputLabel for="search-venta" value="ID de Venta / Referencia" />
+                <h:inputText id="search-venta" value="#{pagosBean.terminoBusqueda}" placeholder="Ej: V-00123..." />
+            </div>
+            <div class="filter-group">
+                <h:outputLabel for="filter-estado" value="Estado del Pago" />
+                <h:selectOneMenu id="filter-estado" value="#{pagosBean.estadoFiltro}">
+                    <f:selectItem itemLabel="Todos" itemValue="" />
+                    <f:selectItem itemLabel="Pendiente" itemValue="pendiente" />
+                    <f:selectItem itemLabel="Confirmado" itemValue="confirmado" />
+                    <f:selectItem itemLabel="Rechazado" itemValue="rechazado" />
+                </h:selectOneMenu>
+            </div>
+            <div class="filter-group">
+                <h:outputLabel for="filter-fecha" value="Rango de Fechas" />
+                <h:inputText id="filter-fecha" value="#{pagosBean.fechaFiltro}" type="date" />
+            </div>
+            <h:commandButton value="Buscar" action="#{pagosBean.buscarPagos}" styleClass="btn-filter">
+                <f:facet name="label">
+                    <i class="fas fa-search"></i> Buscar
+                </f:facet>
+            </h:commandButton>
+        </div>
+        <h:form enctype="multipart/form-data">
+            <div class="payments-table-container">
+                <table class="payments-table">
+                    <thead>
+                        <tr>
+                            <th>ID Venta</th>
+                            <th>Fecha</th>
+                            <th>Referencia Banco</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                            <th>Comprobante</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ui:repeat value="#{pagosBean.pagos}" var="pago">
+                            <tr>
+                                <td>#{pago.ventaId}</td>
+                                <td>
+                                    <h:outputText value="#{pago.fecha}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
+                                </td>
+                                <td>#{pago.referenciaBanco}</td>
+                                <td>$ #{pago.monto}</td>
+                                <td>
+                                    <span class="status-badge status-#{pago.estado}">
+                                        #{pago.estado eq 'pendiente' ? 'Pendiente' : (pago.estado eq 'confirmado' ?
+                                        'Confirmado' : 'Rechazado')}
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <h:commandLink action="#{pagosBean.verDetalle(pago)}" styleClass="icon-comprobante">
+                                        <ui:fragment rendered="#{not empty pago.comprobante}">
+                                            <span class="fa fa-file-pdf-o">Ver Detalles</span>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{empty pago.comprobante}">
+                                            <span class="fa fa-file-o">Ver Detalles</span>
+                                        </ui:fragment>
+                                    </h:commandLink>
+                                </td>
+                            </tr>
+                        </ui:repeat>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Modal de detalles del pago -->
+            <h:panelGroup rendered="#{pagosBean.modalVisible}">
+                <div id="payment-modal" class="modal-overlay" style="display:flex;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Detalles del Pago</h2>
+                            <h:commandButton value="×" action="#{pagosBean.cerrarModal}" styleClass="close-button" />
+                        </div>
+                        <div class="modal-body">
+                            <div class="detail-item">
+                                <h:outputLabel value="ID Venta (ERP)" />
+                                <span>#{pagosBean.pagoSeleccionado.ventaId}</span>
+                            </div>
+                            <div class="detail-item">
+                                <h:outputLabel value="Fecha del Pago" />
+                                <span>#{pagosBean.pagoSeleccionado.fecha}</span>
+                            </div>
+                            <div class="detail-item">
+                                <h:outputLabel value="Monto" />
+                                <span style="font-weight: bold; color: var(--primary-color);">$
+                                    #{pagosBean.pagoSeleccionado.monto}</span>
+                            </div>
+                            <div class="detail-item">
+                                <h:outputLabel value="Estado Actual" />
+                                <span><span class="status-badge status-#{pagosBean.pagoSeleccionado.estado}">
+                                        #{pagosBean.pagoSeleccionado.estado eq 'pendiente' ? 'Pendiente' :
+                                        (pagosBean.pagoSeleccionado.estado eq 'confirmado' ? 'Confirmado' :
+                                        'Rechazado')}
+                                    </span></span>
+                            </div>
+                            <div class="detail-item">
+                                <h:outputLabel value="Referencia Bancaria" />
+                                <span>#{pagosBean.pagoSeleccionado.referenciaBanco}</span>
+                            </div>
+                            <div class="comprobante-section">
+                                <h3>Comprobante Bancario</h3>
+                                <ui:fragment rendered="#{not empty pagosBean.pagoSeleccionado.comprobante}">
+                                    <div class="comprobante-preview">
+                                        <span class="fa fa-file-pdf-o fa-2x"
+                                            style="color: var(--status-rechazado);"></span>
+                                        <span>#{pagosBean.pagoSeleccionado.comprobante}</span>
+                                        <h:commandLink value="Descargar" action="#{pagosBean.descargarComprobante}"
+                                            styleClass="btn btn-secondary" />
+                                    </div>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{empty pagosBean.pagoSeleccionado.comprobante}">
+                                    <div class="upload-area">
+                                        <i class="fas fa-cloud-upload-alt fa-3x" style="color: var(--dark-grey);"></i>
+                                        <p>Arrastra el archivo aquí o haz clic para seleccionarlo</p>
+                                        <h:inputFile value="#{pagosBean.archivoComprobante}"
+                                            style="margin-bottom: 1rem;" />
+                                        <h:commandButton value="Subir Comprobante"
+                                            action="#{pagosBean.subirComprobante}" styleClass="btn btn-secondary" />
+                                    </div>
+                                </ui:fragment>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <h:commandButton value="Rechazar Pago" action="#{pagosBean.rechazarPago}"
+                                styleClass="btn btn-reject" />
+                            <h:commandButton value="Confirmar Pago" action="#{pagosBean.confirmarPago}"
+                                styleClass="btn btn-confirm" />
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </div>
+</h:body>
+
+</html>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Dashboard Inventario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <h:outputStylesheet library="css" name="estilos.css" />
+    <h:outputStylesheet library="css" name="dashboardInventarios.css" />
+</h:head>
+
+<h:body>
+    <!-- Barra de Navegación Superior Unificada -->
+    <div class="navbar">
+        <div class="navbar-brand">
+            <span class="brand-icon">🏢</span>
+            <span class="brand-name">Sistema de Gestión Proveedores</span>
+            <a href="../dashboard.xhtml" class="btn-volver">Inicio</a>
+        </div>
+        <div class="navbar-menu">
+            <div class="user-menu">
+                <span class="user-icon">👤</span>
+                <span class="user-name">#{sessionBean.nombreUsuario}</span>
+                <div class="dropdown-menu">
+                    <h:form>
+                        <h:commandLink action="#{sessionBean.miCuenta}" styleClass="dropdown-item">
+                            <span class="dropdown-icon">⚙️</span> Mi Cuenta
+                        </h:commandLink>
+                        <h:commandLink action="#{sessionBean.configuracion}" styleClass="dropdown-item">
+                            <span class="dropdown-icon">🔧</span> Configuración
+                        </h:commandLink>
+                        <div class="dropdown-divider"></div>
+                        <h:commandLink action="#{sessionBean.logout}" styleClass="dropdown-item logout">
+                            <span class="dropdown-icon">🚪</span> Cerrar Sesión
+                        </h:commandLink>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="dashboard-container">
+        <div class="card-container">
+            <div class="card">
+                <p>#{inventarioBean.inventarios.size()}</p>
+                <h2>Total de Productos</h2>
+            </div>
+            <div class="card">
+                <p>#{inventarioBean.unidadesTotales}</p>
+                <h2>Unidades Totales</h2>
+            </div>
+            <div class="card">
+                <p>#{inventarioBean.productosStockMinimo}</p>
+                <h2>Productos con Stock Minimo</h2>
+            </div>
+            <div class="card">
+                <p>#{inventarioBean.productosSinStock}</p>
+                <h2>Productos sin Stock</h2>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-controls">
+                <div class="search-bar">
+                    <h:selectOneMenu value="#{inventarioBean.filtroBusqueda}" styleClass="form-input">
+                        <f:selectItem itemLabel="Producto" itemValue="productoId" />
+                        <f:selectItem itemLabel="Ubicación" itemValue="ubicacion" />
+                        <f:selectItem itemLabel="ID Inventario" itemValue="id" />
+                    </h:selectOneMenu>
+                    <h:inputText value="#{inventarioBean.terminoBusqueda}"
+                        placeholder="Escribe para buscar por el filtro seleccionado..." styleClass="form-input" />
+                    <h:commandButton value="Buscar" action="#{inventarioBean.buscarInventario}"
+                        styleClass="action-btn" />
+                </div>
+                <div class="action-buttons">
+                    <div class="movement-historial">
+                        <h:link value="Historial de Movimientos" outcome="detalle_inventarios.xhtml"
+                            styleClass="details-btn" />
+                    </div>
+                    <div>
+                        <h:link value="Agregar Inventario" outcome="crear_inventario.xhtml" styleClass="details-btn" />
+                    </div>
+                </div>
+            </div>
+
+            <h:form>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Identificador</th>
+                            <th>Producto</th>
+                            <th>Stock Actual</th>
+                            <th>Stock Mínimo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ui:repeat value="#{inventarioBean.inventarios}" var="inv">
+                            <tr>
+                                <td>#{inv.id}</td>
+                                <td>#{inv.productoId}</td>
+                                <td>#{inv.stock}</td>
+                                <td>#{inv.minimo}</td>
+                                <td>
+                                    <span
+                                        class="status #{inv.stock == 0 ? 'out-stock' : (inv.stock &lt;= inv.minimo ? 'min-stock' : 'in-stock')}">
+                                        #{inv.stock == 0 ? 'Sin Stock' : (inv.stock &lt;= inv.minimo ? 'Stock Mínimo' :
+                                        'En Stock')}
+                                    </span>
+                                </td>
+                                <td>
+                                    <h:commandLink value="Ver Detalles" action="#{inventarioBean.verDetalle(inv.id)}"
+                                        styleClass="details-btn">
+                                        <f:param name="id" value="#{inv.id}" />
+                                    </h:commandLink>
+                                </td>
+                            </tr>
+                        </ui:repeat>
+                    </tbody>
+                </table>
+            </h:form>
+        </div>
+    </main>
+</h:body>
+
+</html>
