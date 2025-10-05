@@ -1,0 +1,425 @@
+/* ======================================= */
+/* RESET Y BASE */
+/* ======================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2B6777 0%, #065C73 100%);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ======================================= */
+/* CONTENEDOR PRINCIPAL */
+/* ======================================= */
+
+.login-container {
+    flex: 1;
+    display: flex;
+    min-height: calc(100vh - 50px);
+}
+
+/* ======================================= */
+/* LADO IZQUIERDO - BRANDING */
+/* ======================================= */
+
+.login-left {
+    flex: 1;
+    background: linear-gradient(135deg, #1a4d5c 0%, #2B6777 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-left::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    top: -150px;
+    left: -150px;
+}
+
+.login-left::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 50%;
+    bottom: -100px;
+    right: -100px;
+}
+
+.login-brand {
+    text-align: center;
+    margin-bottom: 60px;
+    z-index: 1;
+}
+
+.brand-icon {
+    font-size: 5em;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.brand-title {
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.brand-subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+.features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    z-index: 1;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px 20px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(10px);
+}
+
+.feature-icon {
+    font-size: 1.5em;
+    color: #52B69A;
+    font-weight: bold;
+}
+
+.feature-text {
+    font-size: 1em;
+    font-weight: 500;
+}
+
+/* ======================================= */
+/* LADO DERECHO - FORMULARIO */
+/* ======================================= */
+
+.login-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    background: #f8f9fa;
+}
+
+.login-card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.login-title {
+    font-size: 2em;
+    font-weight: 700;
+    color: #2B6777;
+    margin-bottom: 10px;
+}
+
+.login-description {
+    color: #6c757d;
+    font-size: 0.95em;
+}
+
+/* ======================================= */
+/* FORMULARIO */
+/* ======================================= */
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #2B6777;
+    font-size: 0.95em;
+}
+
+.label-icon {
+    font-size: 1.2em;
+}
+
+.form-input {
+    padding: 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #52B69A;
+    box-shadow: 0 0 0 3px rgba(82, 182, 154, 0.1);
+}
+
+.form-input::placeholder {
+    color: #adb5bd;
+}
+
+/* ======================================= */
+/* CHECKBOX */
+/* ======================================= */
+
+.form-group-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.form-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #52B69A;
+}
+
+.checkbox-label {
+    font-size: 0.9em;
+    color: #495057;
+    cursor: pointer;
+}
+
+/* ======================================= */
+/* MENSAJES */
+/* ======================================= */
+
+.messages {
+    margin-top: 10px;
+}
+
+.error-message {
+    background: #fff5f5;
+    color: #dc3545;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border-left: 4px solid #dc3545;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.info-message {
+    background: #e3f2fd;
+    color: #0c5460;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border-left: 4px solid #17a2b8;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.error-message ul,
+.info-message ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* ======================================= */
+/* BOTÓN LOGIN */
+/* ======================================= */
+
+.btn-login {
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #52B69A 0%, #2B6777 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(82, 182, 154, 0.3);
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(82, 182, 154, 0.4);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+/* ======================================= */
+/* FOOTER DEL FORMULARIO */
+/* ======================================= */
+
+.login-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.link-secondary {
+    color: #52B69A;
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.link-secondary:hover {
+    color: #2B6777;
+    text-decoration: underline;
+}
+
+/* ======================================= */
+/* INFORMACIÓN ADICIONAL */
+/* ======================================= */
+
+.login-info {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.info-text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85em;
+    color: #6c757d;
+    text-align: center;
+}
+
+.info-icon {
+    font-size: 1.2em;
+}
+
+/* ======================================= */
+/* FOOTER GLOBAL */
+/* ======================================= */
+
+.footer {
+    height: 50px;
+    background: rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 0.85em;
+    backdrop-filter: blur(10px);
+}
+
+.footer p {
+    margin: 0;
+}
+
+/* ======================================= */
+/* RESPONSIVE */
+/* ======================================= */
+
+@media (max-width: 1024px) {
+    .login-left {
+        display: none;
+    }
+
+    .login-right {
+        flex: 1;
+    }
+}
+
+@media (max-width: 600px) {
+    .login-right {
+        padding: 20px;
+    }
+
+    .login-card {
+        padding: 30px 20px;
+    }
+
+    .login-title {
+        font-size: 1.6em;
+    }
+
+    .brand-title {
+        font-size: 2em;
+    }
+
+    .form-input {
+        padding: 10px 12px;
+    }
+
+    .btn-login {
+        padding: 12px 18px;
+    }
+}
+
+@media (max-width: 400px) {
+    .login-card {
+        padding: 25px 15px;
+    }
+
+    .login-title {
+        font-size: 1.4em;
+    }
+}

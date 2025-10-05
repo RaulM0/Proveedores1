@@ -65,7 +65,10 @@
 
                 <!-- Header -->
                 <header class="main-header">
-                    <h1 class="header-title">Catalogo de Refacciones</h1>
+                    <div class="header-top">
+                        <h1 class="header-title">Catalogo de Refacciones</h1>
+                        <h:link value="Volver" outcome="menu_catalogo" styleClass="btn-volver"/>
+                    </div>
                     <h:form id="searchForm">
                         <div class="search-container">
                             <h:inputText id="searchInput" value="#{catalogoBean.terminoBusqueda}" 

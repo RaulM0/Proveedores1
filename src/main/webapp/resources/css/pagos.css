@@ -1,0 +1,359 @@
+/* ============================================= */
+/* ESTILOS GENERALES Y LAYOUT           */
+/* ============================================= */
+
+:root {
+    --primary-color: #2B6777;
+    --secondary-color: #52B69A;
+    --light-grey: #f8f9fa;
+    --medium-grey: #e9ecef;
+    --dark-grey: #6c757d;
+    --text-color: #212529;
+    --white: #ffffff;
+
+    --status-pendiente: #f8961e;
+    /* Naranja */
+    --status-confirmado: #27ae60;
+    /* Verde */
+    --status-rechazado: #f94144;
+    /* Rojo */
+
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --border-radius: 8px;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-grey);
+    color: var(--text-color);
+    margin: 0;
+}
+
+.main-header {
+    background-color: #2B6777;
+    /* Tu color principal */
+    color: #ffffff;
+    /* Letras en color blanco para buen contraste */
+    padding: 1rem 2rem;
+    /* Espaciado interno (arriba/abajo y a los lados) */
+    display: flex;
+    justify-content: space-between;
+    /* Alinea el logo a la izquierda y la nav a la derecha */
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Sombra sutil para darle profundidad */
+    border-bottom: 2px solid #C8D8E4;
+    /* Un borde inferior claro */
+}
+
+.main-header .logo h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    /* Tamaño del texto del logo */
+    font-weight: 700;
+}
+
+.main-header .main-nav a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-left: 25px;
+    /* Espacio entre los enlaces */
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.main-header .main-nav a:hover {
+    color: #C8D8E4;
+    /* Color al pasar el mouse */
+}
+
+.main-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 70px auto;
+}
+
+/* ============================================= */
+/* FILTROS Y BÚSQUEDA                   */
+/* ============================================= */
+
+.filters-card {
+    background-color: var(--white);
+    padding: 1.5rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1 1 200px;
+    /* Flex-grow, flex-shrink, basis */
+}
+
+.filter-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 0.75rem;
+    border: 1px solid var(--medium-grey);
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.btn-filter {
+    padding: 0.75rem 2rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    height: fit-content;
+}
+
+.btn-filter:hover {
+    background-color: #1e4f5c;
+}
+
+/* ============================================= */
+/* TABLA DE PAGOS                       */
+/* ============================================= */
+
+.payments-table-container {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+    /* Para responsividad en tablas */
+}
+
+.payments-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.payments-table th,
+.payments-table td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--medium-grey);
+}
+
+.payments-table th {
+    background-color: var(--light-grey);
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.payments-table tbody tr {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.payments-table tbody tr:hover {
+    background-color: #f1f7f5;
+}
+
+.payments-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Estilos para las etiquetas de estado */
+.status-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--white);
+    text-transform: uppercase;
+}
+
+.status-pendiente {
+    background-color: var(--status-pendiente);
+}
+
+.status-confirmado {
+    background-color: var(--status-confirmado);
+}
+
+.status-rechazado {
+    background-color: var(--status-rechazado);
+}
+
+.icon-comprobante {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+}
+
+.icon-no-comprobante {
+    font-size: 1.2rem;
+    color: var(--medium-grey);
+}
+
+.main-nav .back-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #2f8363;
+    /* Color principal */
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    margin-left: 1rem;
+    /* Separación del texto de marca */
+}
+
+.main-header .main-nav .back-btn:hover {
+    background-color: #3a56d4;
+    /* Color más oscuro al pasar el mouse */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================= */
+/* MODAL DE DETALLES                    */
+/* ============================================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    /* Oculto por defecto */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.modal-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--medium-grey);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: var(--primary-color);
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--dark-grey);
+}
+
+.modal-body {
+    padding: 2rem;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-item label {
+    font-weight: 600;
+    color: var(--dark-grey);
+    margin-bottom: 0.25rem;
+}
+
+.detail-item span {
+    font-size: 1.1rem;
+}
+
+.comprobante-section {
+    grid-column: 1 / -1;
+    /* Ocupa todo el ancho */
+    border-top: 1px solid var(--medium-grey);
+    padding-top: 1.5rem;
+}
+
+.upload-area {
+    border: 2px dashed var(--medium-grey);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    background-color: var(--light-grey);
+}
+
+.upload-area:hover {
+    border-color: var(--secondary-color);
+}
+
+.comprobante-preview {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--medium-grey);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    background-color: var(--light-grey);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-confirm {
+    background-color: var(--status-confirmado);
+    color: white;
+}
+
+.btn-reject {
+    background-color: var(--status-rechazado);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: var(--dark-grey);
+    color: white;
+}
