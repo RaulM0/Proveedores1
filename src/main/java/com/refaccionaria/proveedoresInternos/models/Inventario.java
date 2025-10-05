@@ -8,7 +8,7 @@ import java.util.Date;
  * @author RMD
  */
 public class Inventario {
-    
+
     private String id;
     private String productoId;
     private int stock;
@@ -16,6 +16,15 @@ public class Inventario {
     private int minimo;
     private int maximo;
     private Date fechaActualizacion;
+    private String descripcion;
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
     public String getId() {
         return id;
@@ -72,7 +81,5 @@ public class Inventario {
     public void setFechaActualizacion(Date fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
     }
-    
-    
-    
+
 }

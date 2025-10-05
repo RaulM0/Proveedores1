@@ -8,13 +8,22 @@ import java.util.Date;
  * @author RMD
  */
 public class Pago {
-    
+
     private String id;
     private String ventaId;
     private Date fecha;
     private String referenciaBanco;
     private double monto;
-    private String estado;   // Pendiente, Confirmado, Rechazado
+    private String estado; // Pendiente, Confirmado, Rechazado
+    private String comprobante;
+
+    public String getComprobante() {
+        return comprobante;
+    }
+
+    public void setComprobante(String comprobante) {
+        this.comprobante = comprobante;
+    }
 
     public String getId() {
         return id;
@@ -63,6 +72,5 @@ public class Pago {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-    
-    
+
 }

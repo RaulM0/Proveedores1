@@ -3,8 +3,11 @@ com\refaccionaria\proveedoresInternos\api\CatalogoApi.class
 com\refaccionaria\proveedoresInternos\api\RestApplication.class
 com\refaccionaria\proveedoresInternos\models\Devolucion.class
 com\refaccionaria\proveedoresInternos\beans\LoginBean.class
+com\refaccionaria\proveedoresInternos\beans\InventarioBean.class
 com\refaccionaria\proveedoresInternos\models\Pago.class
 com\refaccionaria\proveedoresInternos\resources\JakartaEE10Resource.class
+com\refaccionaria\proveedoresInternos\beans\PagosBean.class
+com\refaccionaria\proveedoresInternos\beans\InventarioBean$MovimientoInventario.class
 com\refaccionaria\proveedoresInternos\models\DetalleVenta.class
 com\refaccionaria\proveedoresInternos\models\Producto.class
 com\refaccionaria\proveedoresInternos\beans\CatalogoBean.class
