@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Gestión de Usuarios y Roles</title>
+    <h:outputStylesheet library="css" name="login.css"/>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            width: 700px;
+            padding: 30px;
+        }
+        .card h2 {
+            background-color: #2b6d75;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 0;
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            width: 48%;
+        }
+        .form-input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-cancelar {
+            background-color: #777;
+        }
+        .btn-guardar {
+            background-color: #2b6d75;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="card">
+        <h2>Gestión de Usuarios y Roles</h2>
+
+        <h:form>
+            <!-- Selector de usuario -->
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="usuario">Seleccionar usuario:</label>
+                <h:selectOneMenu id="usuario"
+                                 value="#{usuariosBean.usuarioSeleccionado}"
+                                 valueChangeListener="#{usuariosBean.cargarDatosUsuario}"
+                                 onchange="submit()"
+                                 styleClass="form-input">
+                    <f:selectItem itemLabel="Seleccione un usuario" itemValue=""/>
+                    <f:selectItems value="#{usuariosBean.listaUsuarios}" var="u"
+                                   itemValue="#{u.usuario}" itemLabel="#{u.nombre}"/>
+                </h:selectOneMenu>
+            </div>
+
+            <!-- Campos -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <h:inputText value="#{usuariosBean.nombre}" styleClass="form-input"/>
+                </div>
+                <div class="form-group">
+                    <label>Correo</label>
+                    <h:inputText value="#{usuariosBean.correo}" styleClass="form-input"/>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Apellido Paterno</label>
+                    <h:inputText value="#{usuariosBean.apellidoPaterno}" styleClass="form-input"/>
+                </div>
+                <div class="form-group">
+                    <label>Usuario</label>
+                    <h:inputText value="#{usuariosBean.usuario}" styleClass="form-input" readonly="true"/>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Apellido Materno</label>
+                    <h:inputText value="#{usuariosBean.apellidoMaterno}" styleClass="form-input"/>
+                </div>
+                <div class="form-group">
+                    <label>Rol</label>
+                    <h:selectOneMenu value="#{usuariosBean.rolSeleccionado}" styleClass="form-input">
+                        <f:selectItem itemLabel="Seleccione un rol" itemValue=""/>
+                        <f:selectItem itemLabel="Administrador" itemValue="ADMIN"/>
+                        <f:selectItem itemLabel="Ventas" itemValue="VENTAS"/>
+                        <f:selectItem itemLabel="Almacén" itemValue="ALMACEN"/>
+                    </h:selectOneMenu>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="buttons">
+                <h:button value="Cancelar" outcome="/dashboard" styleClass="btn btn-cancelar"/>
+                <h:commandButton value="Guardar cambios"
+                                 action="#{usuariosBean.guardarCambios}"
+                                 styleClass="btn btn-guardar"/>
+            </div>
+        </h:form>
+    </div>
+</h:body>
+</html>

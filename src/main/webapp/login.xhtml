@@ -84,11 +84,17 @@
                                     globalOnly="false"/>
 
                         <!-- Botón de Login -->
+                        <!-- Botón de Login -->
                         <h:commandButton value="Iniciar Sesión" 
                                          action="#{loginBean.login}"
                                          styleClass="btn-login"/>
 
-                        <!-- Enlaces adicionales -->
+                        <!-- Botón de Registro -->
+                        <h:button value="Registrar Usuario"
+                                  outcome="registroUsuario"
+                                  styleClass="btn-login"/>
+
+                                                <!-- Enlaces adicionales -->
                         <div class="login-footer">
                             <h:link outcome="recuperar-password" value="¿Olvidaste tu contraseña?" styleClass="link-secondary"/>
                         </div>
