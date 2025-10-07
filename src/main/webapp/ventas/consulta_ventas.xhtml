@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Ventas - Consultar Historial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <h:outputStylesheet library="css" name="pagos.css" />
+    <h:outputStylesheet library="css" name="estilos.css" />
+    <h:outputStylesheet library="css" name="dashboard.css" />
+    <h:outputStylesheet name="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</h:head>
+
+<h:body>
+    <div class="navbar">
+        <div class="navbar-brand">
+            <span class="brand-icon">🏢</span>
+            <span class="brand-name">Sistema de Gestión Proveedores</span>
+            <a href="../dashboard.xhtml" class="btn-volver">Inicio</a>
+        </div>
+        <div class="navbar-menu">
+            <div class="user-menu">
+                <span class="user-icon">👤</span>
+                <span class="user-name">#{sessionBean.nombreUsuario}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        
+        <h:form id="formConsulta">
+            <h1 style="margin-bottom: 20px;">Consulta de Ventas</h1>
+            <p:growl id="growl" showDetail="true" />
+            
+            <p:card styleClass="filters-card">
+                <f:facet name="title">Filtros de Búsqueda</f:facet>
+                
+                <p:panelGrid columns="4" layout="grid" style="width: 100%;" styleClass="ui-panelgrid-blank">
+                    
+                    <div class="filter-group" style="width: 100%;">
+                        <p:outputLabel for="folio" value="Folio de Venta:" />
+                        <p:inputText id="folio" value="#{consultaVentasBean.folioBusqueda}" placeholder="Ej: V-00101" style="width: 100%;" />
+                    </div>
+                    
+                    <div class="filter-group" style="width: 100%;">
+                        <p:outputLabel for="estado" value="Estado:" />
+                        <p:selectOneMenu id="estado" value="#{consultaVentasBean.estadoFiltro}" style="width: 100%;">
+                            <f:selectItem itemLabel="Todos" itemValue="" />
+                            <f:selectItem itemLabel="Completada" itemValue="Completada" />
+                            <f:selectItem itemLabel="Pendiente" itemValue="Pendiente" />
+                            <f:selectItem itemLabel="Cancelada" itemValue="Cancelada" />
+                        </p:selectOneMenu>
+                    </div>
+                    
+                    <div class="filter-group" style="width: 100%;">
+                        <p:outputLabel for="fechaInicio" value="Fecha Inicial:" />
+                        <p:calendar id="fechaInicio" value="#{consultaVentasBean.fechaInicio}" pattern="dd/MM/yyyy" showOn="button" style="width: 100%;" />
+                    </div>
+                    
+                    <div class="filter-group" style="margin-top: 20px; width: 100%;">
+                        <p:commandButton value="Buscar" 
+                                         action="#{consultaVentasBean.buscarVentas}" 
+                                         update="growl tablaVentas" 
+                                         icon="pi pi-search" 
+                                         styleClass="btn-filter" 
+                                         style="width: 100%;" />
+                    </div>
+                </p:panelGrid>
+            </p:card>
+            
+            <p:separator style="margin: 20px 0;" />
+            
+            <p:card styleClass="payments-card">
+                <f:facet name="title">Resultados de Ventas</f:facet>
+                
+                <p:dataTable id="tablaVentas" var="venta" value="#{consultaVentasBean.listaVentas}" 
+                             emptyMessage="No se encontraron ventas." 
+                             styleClass="payments-table">
+                    
+                    <p:column headerText="Folio">
+                        <h:outputText value="#{venta.folioVenta}" />
+                    </p:column>
+                    
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{venta.fechaVenta}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Total" style="text-align: right;">
+                        <h:outputText value="#{venta.total}">
+                            <f:convertNumber type="currency" currencySymbol="$" locale="es_MX"/>
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Estado" style="width: 15%;">
+                        <span class="status-badge status-#{venta.status}">
+                            <h:outputText value="#{venta.status}" />
+                        </span>
+                    </p:column>
+                    
+                    <p:column headerText="Acciones" style="width: 10%; text-align: center;">
+                        <p:commandButton value="Ver Detalle" icon="pi pi-eye" styleClass="ui-button-secondary" />
+                    </p:column>
+                    
+                </p:dataTable>
+            </p:card>
+            
+        </h:form>
+        
+        <h:link outcome="menu_ventas.xhtml" value="← Volver al Menú de Ventas" style="text-decoration: none; font-weight: bold; margin-top: 20px; display: inline-block;" />
+    </div>
+</h:body>
+</html>

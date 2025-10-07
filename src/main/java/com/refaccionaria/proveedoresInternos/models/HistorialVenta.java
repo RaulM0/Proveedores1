@@ -53,7 +53,5 @@ public class HistorialVenta {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
-    }
-    
-    
+    }   
 }
