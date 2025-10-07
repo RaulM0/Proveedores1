@@ -75,14 +75,21 @@
                 <span class="menu-icon">📈</span>
                 <h3>Reportes</h3>
                 <p>Generación de reportes avanzados de ventas, pagos, productos y rendimiento.</p>
-                <h:link outcome="reportes" value="Acceder" styleClass="menu-link" />
+                <h:link outcome="reportes/menu_reportes" value="Acceder" styleClass="menu-link" />
             </div>
             <div class="menu-item">
                 <span class="menu-icon">👥</span>
                 <h3>Usuarios y Roles</h3>
                 <p>Gestión de usuarios internos, permisos de acceso y niveles de seguridad.</p>
-                <h:link outcome="usuarios" value="Acceder" styleClass="menu-link" />
+                <h:link outcome="usuarios/usuarios" value="Acceder" styleClass="menu-link" />
             </div>
+                <div class="menu-item">
+                    <span class="menu-icon">📋</span>
+                    <h3>Registro de Actividad</h3>
+                    <p>Consulta las operaciones gestionadas por los usuarios internos.</p>
+                    <h:link outcome="usuarios/actividad" value="Acceder" styleClass="menu-link" />
+                </div>
+
         </div>
     </div>
 </h:body>

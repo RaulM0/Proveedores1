@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Consultar Ventas</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            width: 900px;
+            padding: 30px;
+        }
+        h2 {
+            background-color: #2b6d75;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .filters input, .filters select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #e9e9e9;
+            font-weight: bold;
+        }
+        .total {
+            margin-top: 10px;
+            text-align: left;
+            font-weight: bold;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+            gap: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-pdf { background-color: #2b6d75; }
+        .btn-excel { background-color: #4CAF50; }
+        .btn-cancelar { background-color: #777; }
+        .btn-consultar { background-color: #2b6d75; }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="card">
+        <h2>Consultar Ventas</h2>
+
+        <h:form>
+            <!-- 🔍 Filtros -->
+            <div class="filters">
+                <div class="form-group">
+                    <label for="fechaInicio">Fecha inicio:</label>
+                    <h:inputText id="fechaInicio" value="#{reportesBean.fechaInicio}" styleClass="form-input" placeholder="dd/mm/aaaa" />
+                </div>
+                <div class="form-group">
+                    <label for="fechaFin">Fecha fin:</label>
+                    <h:inputText id="fechaFin" value="#{reportesBean.fechaFin}" styleClass="form-input" placeholder="dd/mm/aaaa" />
+                </div>
+                <div class="form-group">
+                    <label for="vendedor">Vendedor:</label>
+                    <h:selectOneMenu id="vendedor" value="#{reportesBean.vendedorSeleccionado}">
+                        <f:selectItem itemLabel="(Opcional)" itemValue="" />
+                        <f:selectItem itemLabel="Carlos Pérez" itemValue="Carlos Pérez" />
+                        <f:selectItem itemLabel="Ana López" itemValue="Ana López" />
+                        <f:selectItem itemLabel="Luis Torres" itemValue="Luis Torres" />
+                    </h:selectOneMenu>
+                </div>
+                <div class="form-group" style="width:auto;">
+                    <h:commandButton value="Consultar" action="#{reportesBean.consultarVentas}" styleClass="btn btn-consultar" />
+                </div>
+            </div>
+
+            <!-- 📋 Tabla de Ventas -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Folio venta</th>
+                        <th>Vendedor</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ui:repeat value="#{reportesBean.listaVentas}" var="venta">
+                        <tr>
+                            <td>#{venta['folio']}</td>
+                            <td>#{venta['vendedor']}</td>
+                            <td>$#{venta['total']}</td>
+                            <td>#{venta['estado']}</td>
+                        </tr>
+                    </ui:repeat>
+                </tbody>
+            </table>
+
+            <!-- 💵 Total -->
+            <div class="total">
+                TOTAL VENTAS: $#{reportesBean.totalVentas}
+            </div>
+
+            <!-- 🔘 Botones -->
+            <div class="buttons">
+                <h:button value="Regresar" outcome="/reportes/menu_reportes" styleClass="btn btn-cancelar" />
+                <h:commandButton value="Exportar Excel" action="#{reportesBean.exportarExcel('ventas')}" styleClass="btn btn-excel" />
+                <h:commandButton value="Exportar PDF" action="#{reportesBean.exportarPDF('ventas')}" styleClass="btn btn-pdf" />
+            </div>
+        </h:form>
+    </div>
+</h:body>
+</html>

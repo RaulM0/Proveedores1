@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Consultar Devoluciones</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            width: 900px;
+            padding: 30px;
+        }
+        h2 {
+            background-color: #2b6d75;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 0;
+        }
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        .filters label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .filters input, .filters select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #e9e9e9;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-consultar { background-color: #2b6d75; }
+        .btn-cancelar { background-color: #777; }
+        .btn-excel { background-color: #4CAF50; }
+        .btn-pdf { background-color: #2b6d75; }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="card">
+        <h2>Consultar Devoluciones</h2>
+
+        <h:form>
+            <!-- Filtros -->
+            <div class="filters">
+                <div>
+                    <label for="fechaInicio">Fecha inicio:</label>
+                    <h:inputText id="fechaInicio" value="#{devolucionesReportBean.fechaInicio}" 
+                                 style="width: 130px;" placeholder="AAAA-MM-DD"/>
+                </div>
+
+                <div>
+                    <label for="fechaFin">Fecha fin:</label>
+                    <h:inputText id="fechaFin" value="#{devolucionesReportBean.fechaFin}" 
+                                 style="width: 130px;" placeholder="AAAA-MM-DD"/>
+                </div>
+
+                <div>
+                    <label for="producto">Producto:</label>
+                    <h:selectOneMenu id="producto" value="#{devolucionesReportBean.productoSeleccionado}">
+                        <f:selectItem itemLabel="Seleccionar" itemValue=""/>
+                        <f:selectItem itemLabel="Filtro de aire" itemValue="Filtro de aire"/>
+                        <f:selectItem itemLabel="Aceite sintético" itemValue="Aceite sintético"/>
+                        <f:selectItem itemLabel="Bujías NGK" itemValue="Bujías NGK"/>
+                        <f:selectItem itemLabel="Filtro de aceite" itemValue="Filtro de aceite"/>
+                    </h:selectOneMenu>
+                </div>
+
+                <h:commandButton value="Consultar" action="#{devolucionesReportBean.consultar}" styleClass="btn btn-consultar"/>
+            </div>
+
+            <!-- Tabla -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Devolución</th>
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th>Motivo</th>
+                        <th>Cantidad</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ui:repeat value="#{devolucionesReportBean.listaDevoluciones}" var="dev">
+                        <tr>
+                            <td>#{dev['id']}</td>
+                            <td>#{dev['fecha']}</td>
+                            <td>#{dev['producto']}</td>
+                            <td>#{dev['motivo']}</td>
+                            <td>#{dev['cantidad']}</td>
+                            <td>#{dev['estado']}</td>
+                        </tr>
+                    </ui:repeat>
+                </tbody>
+            </table>
+
+            <!-- Pie -->
+            <div style="margin-top:15px;">
+                <strong>TOTAL DE DEVOLUCIONES:</strong> #{devolucionesReportBean.listaDevoluciones.size()}
+            </div>
+
+            <!-- Botones -->
+            <div class="buttons">
+                <h:button value="Regresar" outcome="/reportes/menu_reportes" styleClass="btn btn-cancelar"/>
+                <h:button value="Exportar Excel" outcome="/reportes/menu_reportes" styleClass="btn btn-excel"/>
+                <h:button value="Exportar PDF" outcome="/reportes/menu_reportes" styleClass="btn btn-pdf"/>
+            </div>
+        </h:form>
+    </div>
+</h:body>
+</html>

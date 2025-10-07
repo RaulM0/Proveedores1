@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Registro de Usuario - Sistema de Gestión</title>
+    <h:outputStylesheet library="css" name="login.css"/>
+</h:head>
+
+<h:body>
+    <div class="login-container">
+        <!-- Lado Izquierdo -->
+        <div class="login-left">
+            <div class="login-brand">
+                <div class="brand-icon">🔧</div>
+                <h1 class="brand-title">Proveedora de Autopartes</h1>
+                <p class="brand-subtitle">Sistema de Gestión Empresarial</p>
+            </div>
+
+            <div class="features-list">
+                <div class="feature-item"><span class="feature-icon">✓</span><span class="feature-text">Gestión de Inventario</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span class="feature-text">Control de Ventas</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span class="feature-text">Reportes Avanzados</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span class="feature-text">Seguridad y Roles</span></div>
+            </div>
+        </div>
+
+        <!-- Lado Derecho - Registro -->
+        <div class="login-right">
+            <div class="login-card">
+                <div class="login-header">
+                    <h2 class="login-title">Registro de Usuario</h2>
+                    <p class="login-description">Completa la información para crear tu cuenta</p>
+                </div>
+
+                <h:form styleClass="login-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <h:inputText id="nombre" value="#{registroBean.nombre}" styleClass="form-input" required="true" requiredMessage="Nombre requerido">
+                                <f:passThroughAttribute name="placeholder" value="Nombre"/>
+                            </h:inputText>
+                        </div>
+                        <div class="form-group">
+                            <h:inputText id="apellidoPaterno" value="#{registroBean.apellidoPaterno}" styleClass="form-input" required="true">
+                                <f:passThroughAttribute name="placeholder" value="Apellido Paterno"/>
+                            </h:inputText>
+                        </div>
+                        <div class="form-group">
+                            <h:inputText id="apellidoMaterno" value="#{registroBean.apellidoMaterno}" styleClass="form-input">
+                                <f:passThroughAttribute name="placeholder" value="Apellido Materno"/>
+                            </h:inputText>
+                        </div>
+                        <div class="form-group">
+                            <h:inputText id="correo" value="#{registroBean.correo}" styleClass="form-input" required="true" requiredMessage="Correo requerido">
+                                <f:passThroughAttribute name="placeholder" value="Correo"/>
+                            </h:inputText>
+                        </div>
+                        <div class="form-group">
+                            <h:inputText id="usuario" value="#{registroBean.usuario}" styleClass="form-input" required="true">
+                                <f:passThroughAttribute name="placeholder" value="Usuario"/>
+                            </h:inputText>
+                        </div>
+                        <div class="form-group">
+                            <h:inputSecret id="password" value="#{registroBean.password}" styleClass="form-input" required="true">
+                                <f:passThroughAttribute name="placeholder" value="Contraseña"/>
+                            </h:inputSecret>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <h:messages styleClass="messages" errorClass="error-message" infoClass="info-message"/>
+                                             
+                    <div class="form-buttons">
+  
+                        <h:commandButton value="Registrar usuario" action="#{registroBean.registrar}" styleClass="btn-login"/>
+                    </div>
+                     <h:button value="Cancelar"
+                                  outcome="login"
+                                  styleClass="btn-login"/>
+                </h:form>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 Proveedora de Autopartes - Sistema de Gestión Empresarial</p>
+    </div>
+</h:body>
+</html>
