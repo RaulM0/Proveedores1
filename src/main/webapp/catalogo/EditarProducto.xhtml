@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html> <!-- DOCTYPE MODERNO CORREGIDO -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core">
@@ -14,10 +14,29 @@
                 <h:outputText value="Editar Producto"/>
             </div>
 
-            <h:form id="edicionForm">
-                <div class="contenido">
+            <h:messages id="mensajes"
+                        globalOnly="true"
+                        showDetail="true"
+                        showSummary="true"
+                        style="margin: 10px 0; font-weight: bold;"
+                        errorClass="error-message"
+                        infoClass="info-message"/>
 
-                    <h:link value="Volver" outcome="menu_catalogo" styleClass="btn-volver"/>
+            <h:form id="busquedaForm">
+                <div class="contenedor-busqueda">
+                    <div class="campo-busqueda">
+                        <h:outputLabel value="Código Producto:" for="codigoBusqueda"/>
+                        <h:inputText id="codigoBusqueda" value="#{productoBean.codigoBusqueda}" 
+                                     styleClass="input-codigo" required="true"
+                                     requiredMessage="Ingrese un código para buscar"/>
+                        <h:commandButton value="Buscar" action="#{productoBean.buscarProducto}" 
+                                         styleClass="btn-buscar"/>
+                    </div>
+                </div>
+            </h:form>
+
+            <h:form id="edicionForm" enctype="multipart/form-data">
+                <div class="contenido">
 
                     <div class="fila-metadata">
                         <div class="meta-izq">
@@ -36,24 +55,34 @@
 
                             <div class="campo">
                                 <h:outputLabel value="Nombre:" for="nombre"/>
-                                <h:inputText id="nombre" value="#{productoBean.nombre}"/>
+                                <h:inputText id="nombre" value="#{productoBean.nombre}" required="true"
+                                             requiredMessage="El nombre es requerido"/>
                             </div>
 
                             <div class="campo">
                                 <h:outputLabel value="Marca:" for="marca"/>
-                                <h:inputText id="marca" value="#{productoBean.marca}"/>
+                                <h:inputText id="marca" value="#{productoBean.marca}" required="true"
+                                             requiredMessage="La marca es requerida"/>
                             </div>
 
                             <div class="campo">
                                 <h:outputLabel value="Categoría:" for="categoria"/>
-                                <h:selectOneMenu id="categoria" value="#{productoBean.categoria}">
-                                    <f:selectItem itemLabel="Categoria" itemValue="Categoria"/>
+                                <h:selectOneMenu id="categoria" value="#{productoBean.categoria}" required="true"
+                                                 requiredMessage="La categoría es requerida">
+                                    <f:selectItem itemLabel="Motor" itemValue="Motor"/>
+                                    <f:selectItem itemLabel="Transmisión" itemValue="Transmisión"/>
+                                    <f:selectItem itemLabel="Sistema de frenos" itemValue="Sistema de frenos"/>
+                                    <f:selectItem itemLabel="Suspensión y dirección" itemValue="Suspensión y dirección"/>
+                                    <f:selectItem itemLabel="Sistema de escape y admisión" itemValue="Sistema de escape y admisión"/>
                                 </h:selectOneMenu>
                             </div>
 
                             <div class="campo">
                                 <h:outputLabel value="Precio Compra:" for="precioCompra"/>
-                                <h:inputText id="precioCompra" value="#{productoBean.precioCompra}"/>
+                                <h:inputText id="precioCompra" value="#{productoBean.precioCompra}" required="true"
+                                             requiredMessage="El precio de compra es requerido">
+                                    <f:convertNumber minFractionDigits="2" maxFractionDigits="2"/>
+                                </h:inputText>
                             </div>
 
                             <div class="fecha-actualizacion">
@@ -67,30 +96,84 @@
 
                             <div class="campo">
                                 <h:outputLabel value="Precio Venta:" for="precioVenta"/>
-                                <h:inputText id="precioVenta" value="#{productoBean.precioVenta}"/>
+                                <h:inputText id="precioVenta" value="#{productoBean.precioVenta}" required="true"
+                                             requiredMessage="El precio de venta es requerido">
+                                    <f:convertNumber minFractionDigits="2" maxFractionDigits="2"/>
+                                </h:inputText>
                             </div>
 
                             <div class="campo campo-area">
                                 <h:outputLabel value="Características:" for="caracteristicas"/>
-                                <h:inputTextarea id="caracteristicas" value="#{productoBean.caracteristicas}" rows="4"/>
+                                <h:inputTextarea id="caracteristicas" value="#{productoBean.caracteristicas}" rows="4"
+                                                 required="true" requiredMessage="Las características son requeridas"/>
                             </div>
 
                             <div class="campo">
                                 <h:outputLabel value="Estatus:" for="estatus"/>
-                                <h:selectOneMenu id="estatus" value="#{productoBean.estatus}" styleClass="select-pequeno">
+                                <h:selectOneMenu id="estatus" value="#{productoBean.estatus}" styleClass="select-pequeno"
+                                                 required="true" requiredMessage="El estatus es requerido">
+                                    <f:selectItem itemLabel="Seleccione estatus" itemValue=""/>
                                     <f:selectItem itemLabel="Activo" itemValue="Activo"/>
+                                    <f:selectItem itemLabel="Inactivo" itemValue="Inactivo"/>
+                                    <f:selectItem itemLabel="En pedido" itemValue="En pedido"/>
                                 </h:selectOneMenu>
+                            </div>
+
+                            <div class="campo">
+                                <h:outputLabel value="Cargar nueva imagen:" for="imagen"/>
+                                <h:inputFile id="imagen" value="#{productoBean.imagen}"
+                                             accept="image/png,image/jpeg,image/jpg,image/gif"/>
+                                <small style="color: #666; font-size: 11px; display: block; margin-top: 5px;">
+                                    Dejar vacio para mantener la imagen actual
+                                </small>
+                            </div>
+
+                            <div class="campo campo-imagen">
+                                <div class="vista-previa-container">
+                                    <h:outputLabel value="Vista previa:" style="display: block; margin-bottom: 10px; font-weight: bold;"/>
+
+                                    <h:panelGroup rendered="#{not empty productoBean.imagenRuta and productoBean.imagenRuta != 'default.png'}">
+
+                                        <h:panelGroup rendered="#{productoBean.imagenExistente}">
+                                            <div class="vista-previa-imagen">
+                                                <h:graphicImage value="#{request.contextPath}/imagenes/#{productoBean.imagenRuta}" 
+                                                                alt="Vista previa del producto"/>
+                                                <div style="margin-top: 15px;">
+                                                    <h:outputText value="Imagen cargada correctamente" 
+                                                                  style="color: #4CAF50; font-size: 13px; font-weight: bold; display: block;"/>
+                                                    <h:outputText value="Archivo: #{productoBean.imagenRuta}" 
+                                                                  style="font-size: 11px; color: #666; display: block; margin-top: 5px;"/>
+                                                </div>
+                                            </div>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup rendered="#{not productoBean.imagenExistente}">
+                                            <div style="margin-top: 10px; padding: 20px; border: 2px solid #f44336; border-radius: 8px; background-color: #ffebee;">
+                                                <h:outputText value="Imagen no encontrada en el servidor" 
+                                                              style="color: #d32f2f; font-weight: bold; display: block; margin-bottom: 8px;"/>
+                                                <h:outputText value="Archivo registrado: #{productoBean.imagenRuta}" 
+                                                              style="font-size: 12px; color: #666; display: block;"/>
+                                            </div>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{empty productoBean.imagenRuta or productoBean.imagenRuta == 'default.png'}">
+                                        <div class="sin-imagen">
+                                            <h:outputText value="No hay imagen registrada para este producto" style="font-size: 14px;"/>
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
                             </div>
 
                         </div>
                     </div>
+                </div>
 
-                    <!-- Botones finales -->
-                    <div class="contenedor-botones">
-                        <h:commandButton value="Cancelar" action="cancelarRegistro" immediate="true" styleClass="btn-cancelar"/>
-                        <h:commandButton value="Editar Producto" action="#{productoBean.registrarProducto}" styleClass="btn-registrar"/>
-                    </div>
-
+                <div class="contenedor-botones">
+                    <h:commandButton value="Cancelar" action="#{productoBean.cancelarRegistro}" 
+                                     immediate="true" styleClass="btn-cancelar"/>
+                    <h:commandButton value="Guardar Cambios" action="#{productoBean.editarProducto}" 
+                                     styleClass="btn-registrar"/>
                 </div>
             </h:form>
         </div>

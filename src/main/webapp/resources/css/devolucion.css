@@ -517,3 +517,91 @@ body {
         text-align: center;
     }
 }
+
+/* ======================================= */
+/* ESTILOS PARA BÚSQUEDA DE VENTA */
+/* ======================================= */
+
+/* Contenedor para agrupar input y botón */
+.input-with-button {
+    display: flex;
+    flex: 1; /* Ocupa el espacio disponible en el form-group */
+}
+
+/* Ajusta el input cuando está en el grupo */
+.input-with-button .form-input {
+    /* El input ocupa todo el espacio menos el botón */
+    flex: 1;
+    /* Quita bordes redondeados de la derecha para unirse al botón */
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* Estilo del nuevo botón de búsqueda */
+.btn-buscar {
+    padding: 10px 20px;
+    background: #2B6777; /* Color principal de tu tema */
+    color: white;
+    border: none;
+    /* Une el botón al input */
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    /* Evita el doble borde */
+    margin-left: -2px; 
+}
+
+.btn-buscar:hover {
+    background: #52B69A; /* Color hover de tu tema */
+}
+
+/* ======================================= */
+/* PANEL DE DETALLES DE VENTA (NUEVO) */
+/* ======================================= */
+
+.sale-details {
+    padding: 15px 20px;
+    background: #e6f7f3; /* Un fondo suave color menta */
+    border-radius: 8px;
+    border-left: 4px solid #52B69A; /* Acento de tu tema */
+    margin-bottom: 20px; /* Separación de la lista de productos */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+    flex-wrap: wrap; /* Para responsive */
+    gap: 15px;
+}
+
+.sale-details div {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.sale-details span {
+    font-weight: 600;
+    color: #2B6777; /* Color oscuro de tu tema */
+}
+
+/* ======================================= */
+/* AJUSTES A LA LISTA DE PRODUCTOS */
+/* ======================================= */
+
+/* El 'panelGroup' de JSF necesita que su clase 
+  'productos-list' tenga las mismas propiedades 
+  que tenías antes. 
+*/
+.productos-list {
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    padding: 15px;
+    background-color: white;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 150px;
+    max-height: 300px;
+}

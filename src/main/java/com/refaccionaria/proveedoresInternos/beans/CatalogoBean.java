@@ -1,14 +1,19 @@
 package com.refaccionaria.proveedoresInternos.beans;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 import com.refaccionaria.proveedoresInternos.models.Producto;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
+import org.bson.Document;
+
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Named
 @SessionScoped
@@ -18,135 +23,55 @@ public class CatalogoBean implements Serializable {
     private List<Producto> productos;
     private List<Producto> productosFiltrados;
 
-    public CatalogoBean() {
-        cargarProductos();
+    // === Conexión a MongoDB ===
+    private MongoDatabase getDatabase() {
+        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
+        return mongoClient.getDatabase("refaccionaria");
     }
 
-    private void cargarProductos() {
+    // === Inicializar datos al cargar el bean ===
+    @PostConstruct
+    public void init() {
+        cargarProductosDesdeMongo();
+    }
+
+    // === Cargar todos los productos desde Mongo ===
+    private void cargarProductosDesdeMongo() {
         productos = new ArrayList<>();
+        try {
+            MongoCollection<Document> collection = getDatabase().getCollection("productos");
+            MongoCursor<Document> cursor = collection.find().iterator();
 
-        // Motor
-        productos.add(crearProducto(
-                "ENG-001", "Bomba de Aceite Bosch", "Bosch", "Motor",
-                2499.00, crearCaracteristicas("Acero", "Alta presión", "Compatible con motores 1.6-2.0L"),
-                "fas fa-cogs"
-        ));
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+                Producto p = new Producto();
 
-        productos.add(crearProducto(
-                "ENG-002", "Juego de Pistones Mahle", "Mahle", "Motor",
-                3999.00, crearCaracteristicas("Aluminio", "4 pistones", "Kit completo"),
-                "fas fa-cogs"
-        ));
+                p.setId(doc.getObjectId("_id").toString());
+                p.setCodigoProducto(doc.getString("codigoProducto"));
+                p.setNombre(doc.getString("nombre"));
+                p.setMarca(doc.getString("marca"));
+                p.setCategoria(doc.getString("categoria"));
+                p.setPrecioVenta(doc.getDouble("precioVenta"));
+                p.setPrecioCompra(doc.getDouble("precioCompra"));
+                p.setCaracteristicas(doc.getString("caracteristicas"));
+                p.setEstatus(doc.getString("estatus"));
+                p.setFechaCreacion(doc.getString("fechaCreacion"));
+                p.setFechaActualizacion(doc.getString("fechaActualizacion"));
+                p.setImagenRuta(doc.getString("imagenRuta"));
 
-// Transmisión
-        productos.add(crearProducto(
-                "TRS-001", "Embrague Luk", "Luk", "Transmisión",
-                3499.00, crearCaracteristicas("Kit completo", "Diámetro 228mm", "Alta durabilidad"),
-                "fas fa-cog"
-        ));
+                productos.add(p);
+            }
+            cursor.close();
+            productosFiltrados = new ArrayList<>(productos);
 
-        productos.add(crearProducto(
-                "TRS-002", "Palier Derecho SKF", "SKF", "Transmisión",
-                1999.00, crearCaracteristicas("Acero", "Compatible con Toyota Corolla 2018-2023"),
-                "fas fa-cog"
-        ));
-
-// Frenos
-        productos.add(crearProducto(
-                "BRK-001", "Pastillas de Freno Brembo", "Brembo", "Frenos",
-                1599.00, crearCaracteristicas("Cerámica", "Delanteras", "Compatible con Honda Civic"),
-                "fas fa-stop-circle"
-        ));
-
-        productos.add(crearProducto(
-                "BRK-002", "Disco de Freno ATE", "ATE", "Frenos",
-                2499.00, crearCaracteristicas("Ventilado", "Delantero", "Acero de alta resistencia"),
-                "fas fa-stop-circle"
-        ));
-
-// Suspensión
-        productos.add(crearProducto(
-                "SUS-001", "Amortiguador KYB", "KYB", "Suspensión",
-                1899.00, crearCaracteristicas("Delantero", "Gas", "Compatible con Nissan Altima"),
-                "fas fa-arrows-alt-v"
-        ));
-
-        productos.add(crearProducto(
-                "SUS-002", "Resorte Eibach", "Eibach", "Suspensión",
-                1299.00, crearCaracteristicas("De acero", "Juego completo", "Sport"),
-                "fas fa-arrows-alt-v"
-        ));
-
-// Sistema Eléctrico
-        productos.add(crearProducto(
-                "ELE-001", "Batería Bosch 12V 60Ah", "Bosch", "Sistema Eléctrico",
-                2199.00, crearCaracteristicas("12V", "60Ah", "Garantía 12 meses"),
-                "fas fa-bolt"
-        ));
-
-        productos.add(crearProducto(
-                "ELE-002", "Alternador Denso", "Denso", "Sistema Eléctrico",
-                3999.00, crearCaracteristicas("12V", "120A", "Compatible con Toyota y Honda"),
-                "fas fa-bolt"
-        ));
-
-// Refrigeración
-        productos.add(crearProducto(
-                "COOL-001", "Radiador Valeo", "Valeo", "Refrigeración",
-                2799.00, crearCaracteristicas("Aluminio", "Para motor 1.6-2.0L", "Alta eficiencia"),
-                "fas fa-tint"
-        ));
-
-        productos.add(crearProducto(
-                "COOL-002", "Ventilador eléctrico Hella", "Hella", "Refrigeración",
-                1499.00, crearCaracteristicas("12V", "Electrónico", "Compatible con VW Golf"),
-                "fas fa-tint"
-        ));
-
-        productosFiltrados = new ArrayList<>(productos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            productos = new ArrayList<>();
+            productosFiltrados = new ArrayList<>();
+        }
     }
 
-    private Producto crearProducto(String codigo, String nombre, String marca,
-            String categoria, double precio,
-            Map<String, String> caracteristicas, String icono) {
-        Producto producto = new Producto();
-        producto.setId(generarId());
-        producto.setCodigoProducto(codigo);
-        producto.setNombre(nombre);
-        producto.setMarca(marca);
-        producto.setCategoria(categoria);
-        producto.setPrecio(precio);
-        producto.setCaracteristicas(caracteristicas);
-        producto.setFechaCreacion(new Date());
-        producto.setUltimaActualizacion(new Date());
-
-        // Agregar icono como caracteristica adicional para el frontend
-        if (producto.getCaracteristicas() == null) {
-            producto.setCaracteristicas(new HashMap<>());
-        }
-        producto.getCaracteristicas().put("icono", icono);
-
-        return producto;
-    }
-
-    private Map<String, String> crearCaracteristicas(String... caracteristicas) {
-        Map<String, String> mapa = new HashMap<>();
-        if (caracteristicas.length >= 1) {
-            mapa.put("especificacion1", caracteristicas[0]);
-        }
-        if (caracteristicas.length >= 2) {
-            mapa.put("especificacion2", caracteristicas[1]);
-        }
-        if (caracteristicas.length >= 3) {
-            mapa.put("especificacion3", caracteristicas[2]);
-        }
-        return mapa;
-    }
-
-    private String generarId() {
-        return "PROD-" + System.currentTimeMillis() + "-" + (int) (Math.random() * 1000);
-    }
-
+    // === Búsqueda ===
     public void buscarProductos() {
         if (terminoBusqueda == null || terminoBusqueda.trim().isEmpty()) {
             productosFiltrados = new ArrayList<>(productos);
@@ -155,113 +80,101 @@ public class CatalogoBean implements Serializable {
             for (Producto p : productos) {
                 if (p.getNombre().toLowerCase().contains(terminoBusqueda.toLowerCase())
                         || p.getMarca().toLowerCase().contains(terminoBusqueda.toLowerCase())
-                        || p.getCategoria().toLowerCase().contains(terminoBusqueda.toLowerCase())) {
+                        || p.getCategoria().toLowerCase().contains(terminoBusqueda.toLowerCase())
+                        || p.getCodigoProducto().toLowerCase().contains(terminoBusqueda.toLowerCase())) {
                     productosFiltrados.add(p);
                 }
             }
         }
     }
 
+    // === Filtrar por categoría ===
     public void filtrarPorCategoria(String categoria) {
         productosFiltrados = new ArrayList<>();
         for (Producto p : productos) {
-            if (p.getCategoria().equalsIgnoreCase(categoria)) {
+            if (p.getCategoria() != null && p.getCategoria().equalsIgnoreCase(categoria)) {
                 productosFiltrados.add(p);
             }
         }
     }
 
+    // === Etiqueta visual según estatus ===
+    public String getEtiqueta(Producto producto) {
+        if (producto.getEstatus() != null && producto.getEstatus().equalsIgnoreCase("Inactivo")) {
+            return "Inactivo";
+        }
+        return "Activo";
+    }
+
+    // === Clase CSS para stock/estatus ===
+    public String getClaseStock(Producto producto) {
+        if (producto == null || producto.getEstatus() == null) {
+            return "stock-desconocido";
+        }
+
+        if (producto.getEstatus().equalsIgnoreCase("Activo")) {
+            return "stock-alto"; // CSS: verde o disponible
+        } else {
+            return "stock-bajo"; // CSS: rojo o agotado
+        }
+    }
+
+    // === Texto de stock/estatus ===
+    public String getTextoStock(Producto producto) {
+        if (producto == null || producto.getEstatus() == null) {
+            return "Sin información";
+        }
+
+        if (producto.getEstatus().equalsIgnoreCase("Activo")) {
+            return "Disponible";
+        } else {
+            return "Agotado";
+        }
+    }
+
+    // === Icono según categoría ===
+    public String getIcono(Producto producto) {
+        if (producto.getCategoria() == null) {
+            return "fas fa-box";
+        }
+        switch (producto.getCategoria().toLowerCase()) {
+            case "motor":
+                return "fas fa-cog";
+            case "transmision":
+                return "fas fa-exchange-alt";
+            case "sistema de frenos":
+                return "fas fa-stop-circle";
+            case "suspension y direccion":
+                return "fas fa-car-side";
+            case "escape y emisiones":
+                return "fas fa-wind";
+            default:
+                return "fas fa-box";
+        }
+    }
+
+    // === Imagen URL (usa tu servlet) ===
+    public String getImagenUrl(Producto producto) {
+        if (producto.getImagenRuta() != null && !producto.getImagenRuta().isEmpty()) {
+            // Usa el servlet para servir las imágenes
+            return "/imagenes/" + producto.getImagenRuta();
+        } else {
+            return "/imagenes/default.png";
+        }
+    }
+
+    // === Acciones del catálogo ===
     public void agregarAlCarrito(Producto producto) {
-        System.out.println("Producto agregado al carrito: " + producto.getNombre());
-        System.out.println("Codigo: " + producto.getCodigoProducto());
-        System.out.println("Precio: $" + producto.getPrecio());
-        // Aqui puedes implementar la logica real del carrito de compras
+        // Implementación futura
+        System.out.println("🛒 Agregado al carrito: " + producto.getNombre());
     }
 
     public void verDetalles(Producto producto) {
-        System.out.println("=== DETALLES DEL PRODUCTO ===");
-        System.out.println("Nombre: " + producto.getNombre());
-        System.out.println("Marca: " + producto.getMarca());
-        System.out.println("Categoria: " + producto.getCategoria());
-        System.out.println("Precio: $" + producto.getPrecio());
-        System.out.println("Codigo: " + producto.getCodigoProducto());
-        System.out.println("Caracteristicas: " + producto.getCaracteristicas());
-        // Aqui puedes navegar a una pagina de detalles del producto
+        // Implementación futura
+        System.out.println("🔍 Ver detalles de: " + producto.getNombre());
     }
 
-    // Metodos auxiliares para el frontend
-    public String getIcono(Producto producto) {
-        if (producto.getCaracteristicas() == null) {
-            return "fas fa-box";
-        }
-        String icono = producto.getCaracteristicas().get("icono");
-        return icono != null ? icono : "fas fa-box";
-    }
-
-    public String getEtiqueta(Producto producto) {
-        // Logica para determinar etiquetas (nuevo, oferta, etc.)
-        if (producto.getPrecio() > 20000) {
-            return "Premium";
-        }
-        if (producto.getPrecio() < 1000) {
-            return "Oferta";
-        }
-        if (producto.getMarca().equals("Intel") || producto.getMarca().equals("AMD")) {
-            return "Nuevo";
-        }
-        return "";
-    }
-
-    public int getStockSimulado(Producto producto) {
-        // Stock simulado basado en el codigo del producto
-        String codigo = producto.getCodigoProducto();
-        if (codigo == null) {
-            return 0;
-        }
-        if (codigo.startsWith("PROC")) {
-            return 15;
-        }
-        if (codigo.startsWith("RAM")) {
-            return 8;
-        }
-        if (codigo.startsWith("SSD")) {
-            return 25;
-        }
-        if (codigo.startsWith("HDD")) {
-            return 12;
-        }
-        if (codigo.startsWith("GPU")) {
-            return 3;
-        }
-        if (codigo.startsWith("COOL")) {
-            return 18;
-        }
-        return 10;
-    }
-
-    public String getClaseStock(Producto producto) {
-        int stock = getStockSimulado(producto);
-        if (stock > 10) {
-            return "stock-high";
-        }
-        if (stock > 0) {
-            return "stock-low";
-        }
-        return "stock-none";
-    }
-
-    public String getTextoStock(Producto producto) {
-        int stock = getStockSimulado(producto);
-        if (stock > 10) {
-            return "En stock";
-        }
-        if (stock > 0) {
-            return "Ultimas unidades";
-        }
-        return "Agotado";
-    }
-
-    // Getters y Setters
+    // === Getters & Setters ===
     public String getTerminoBusqueda() {
         return terminoBusqueda;
     }
@@ -277,4 +190,14 @@ public class CatalogoBean implements Serializable {
     public List<Producto> getProductosFiltrados() {
         return productosFiltrados;
     }
+
+    public boolean isProductoActivo(Producto producto) {
+        return producto.getEstatus() != null && producto.getEstatus().equalsIgnoreCase("Activo");
+    }
+
+    public String irACatalogo() {
+        cargarProductosDesdeMongo();
+        return "catalogo?faces-redirect=true";
+    }
+
 }

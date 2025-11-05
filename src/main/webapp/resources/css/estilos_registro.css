@@ -421,3 +421,157 @@ textarea {
         text-align: center;
     }
 }
+
+/* ======================================= */
+/* MENSAJES DE ERROR/INFO (BÁSICOS) */
+/* ======================================= */
+
+.error-message {
+    color: red;
+}
+
+.info-message {
+    color: green;
+}
+
+/* ======================================= */
+/* BARRA DE BÚSQUEDA (CON INPUT FUSIONADO) */
+/* ======================================= */
+
+.contenedor-busqueda {
+    /* Estilo de tarjeta blanca */
+    background-color: #ffffff;
+    padding: 20px 40px; 
+    border-bottom: 2px solid #e9ecef;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    position: relative;
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+.campo-busqueda {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espacio entre el label y el grupo de input */
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.campo-busqueda label {
+    font-weight: 600; 
+    font-size: 0.95em;
+    color: #2B6777; /* Color oscuro de tu tema */
+}
+
+/* Contenedor para agrupar input y botón */
+.input-with-button {
+    display: flex;
+    flex: 1; /* Ocupa el espacio disponible */
+}
+
+/* Ajusta el input (input-codigo) */
+.input-with-button .input-codigo {
+    flex: 1;
+    /* Estilos de tu formulario principal */
+    padding: 10px 15px;
+    border: 2px solid #e9ecef;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+    
+    /* Lógica de fusión */
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* Efecto :focus que coincide con tus otros inputs */
+.input-with-button .input-codigo:focus {
+    outline: none;
+    border-color: #52B69A; /* Color verde principal */
+    box-shadow: 0 0 0 3px rgba(82, 182, 154, 0.1);
+    position: relative; /* Para que la sombra se vea bien */
+    z-index: 2;
+}
+
+/* Estilo del botón de búsqueda (fusionado) */
+.input-with-button .btn-buscar {
+    background-color: #52B69A; /* Color verde principal */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+    
+    /* Lógica de fusión */
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    
+    /* Alineación con el borde del input (usando el color verde) */
+    border-top: 2px solid #52B69A;
+    border-right: 2px solid #52B69A;
+    border-bottom: 2px solid #52B69A;
+}
+
+/* Efecto :hover que coincide con tus otros botones */
+.input-with-button .btn-buscar:hover {
+    background-color: #409c80; /* Verde más oscuro */
+    border-color: #409c80;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ======================================= */
+/* FIX PARA VISTA PREVIA DE IMAGEN */
+/* ======================================= */
+
+.campo.campo-imagen {
+    align-items: flex-start !important;
+    min-height: auto !important;
+}
+
+.vista-previa-container {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.vista-previa-imagen {
+    margin-top: 10px;
+    text-align: center;
+    padding: 20px;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.vista-previa-imagen img {
+    width: auto !important;
+    max-width: 450px !important;
+    height: auto !important;
+    max-height: 450px !important;
+    min-width: 200px !important;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.sin-imagen {
+    margin-top: 10px;
+    text-align: center;
+    padding: 40px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    color: #999;
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fafafa;
+}

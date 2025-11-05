@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Procesar Reembolsos</title>
+        <h:outputStylesheet name="css/reembolsos.css" />
+    </h:head>
+
+    <h:body>
+        <div class="navbar">
+            <div class="navbar-brand">
+                <span class="brand-icon">🏢</span>
+                <span class="brand-name">Sistema de Gestión Proveedores</span>
+            </div>
+            <div class="navbar-menu">
+                <div class="user-menu">
+                    <span class="user-icon">👤</span>
+                    <span class="user-name">#{sessionBean.nombreUsuario}</span>
+                    <div class="dropdown-menu">
+                        <h:form>
+                            <h:commandLink action="#{sessionBean.miCuenta}" styleClass="dropdown-item">
+                                <span class="dropdown-icon">⚙️</span> Mi Cuenta
+                            </h:commandLink>
+                            <h:commandLink action="#{sessionBean.configuracion}" styleClass="dropdown-item">
+                                <span class="dropdown-icon">🔧</span> Configuración
+                            </h:commandLink>
+                            <div class="dropdown-divider"></div>
+                            <h:commandLink action="#{sessionBean.logout}" styleClass="dropdown-item logout">
+                                <span class="dropdown-icon">🚪</span> Cerrar Sesión
+                            </h:commandLink>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="header">
+                <h:link value="Volver" outcome="menu_devoluciones" styleClass="btn-volver"/>
+
+                <h1>Centro de Reembolsos</h1>
+                <p>Devoluciones pendientes de aprobación y pago bancario.</p>
+            </div>
+
+            <h:messages id="mensajes" globalOnly="true" 
+                        styleClass="messages"
+                        errorClass="msg-error" 
+                        infoClass="msg-info" />
+
+            <h:form id="formReembolsos">
+
+                <div class="tabla-wrapper">
+                    <h:dataTable value="#{procesarReembolsosBean.devolucionesPendientes}" var="dev"
+                                 styleClass="tabla-datos" 
+                                 rowClasses="fila-par, fila-impar"
+                                 headerClass="tabla-header"
+                                 rendered="#{not empty procesarReembolsosBean.devolucionesPendientes}">
+
+                        <h:column>
+                            <f:facet name="header">Folio Devolución</f:facet>
+                            <span class="col-folio">#{dev.devolucionId}</span>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Folio Venta</f:facet>
+                                #{dev.folioVenta}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Fecha</f:facet>
+                            <h:outputText value="#{dev.fecha}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Motivo</f:facet>
+                            <span class="col-motivo">#{dev.motivo}</span>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Monto</f:facet>
+                            <h:outputText value="#{dev.totalReembolsado}" styleClass="col-monto">
+                                <f:convertNumber type="currency" currencySymbol="$" />
+                            </h:outputText>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Acción</f:facet>
+
+                            <h:commandButton value="Procesar Reembolso Bancario"
+                                             action="#{procesarReembolsosBean.reembolsarABanco(dev)}"
+                                             styleClass="btn-reembolsar"
+                                             onclick="return confirm('¿Está seguro que desea procesar esta transferencia bancaria por $#{dev.totalReembolsado}? Esta acción es irreversible.');">
+
+                                <f:ajax execute="@this" render=":formReembolsos :mensajes" />
+                            </h:commandButton>
+                        </h:column>
+
+                    </h:dataTable>
+                </div>
+
+                <h:outputText value="¡Excelente! No hay devoluciones pendientes de procesar." 
+                              styleClass="msg-vacio"
+                              rendered="#{empty procesarReembolsosBean.devolucionesPendientes}" />
+            </h:form>
+        </div>
+    </h:body>
+</html>

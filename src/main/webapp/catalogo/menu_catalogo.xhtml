@@ -588,54 +588,13 @@
                 </div>
             </div>
         </div>
-        <!--  
-        <div class="navbar">
-            <div class="navbar-container">
-                <div class="logo-section">
-                    <div class="company-logo">R</div>
-                    <div class="company-name">Refaccionaria Industrial</div>
-                </div>
 
-                <div class="navbar-menu">
-                    <h:link value="Dashboard" outcome="dashboard" styleClass="nav-link"/>
-                    <h:link value="Catálogo" outcome="catalogo" styleClass="nav-link"/>
-                    <h:link value="Inventario" outcome="inventario" styleClass="nav-link"/>
-
-                    <div class="user-info">
-                        <div class="user-avatar">OP</div>
-                        <span>Operador</span>
-                    </div>
-                    <h:link value="Cerrar Sesión" outcome="logout" styleClass="logout-btn" />
-                </div>
-            </div>
-        </div>
-        -->
 
         <!-- Contenido Principal -->
         <div class="catalogo-container">
             <div class="catalogo-header">
                 <h1 class="catalogo-title">Gestión de Catálogo</h1>
                 <p class="catalogo-subtitle">Administre el inventario de refacciones y productos del almacén</p>
-            </div>
-
-            <!-- Estadísticas Rápidas -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number">1,847</div>
-                    <div class="stat-label">Refacciones Activas</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">42</div>
-                    <div class="stat-label">Categorías</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">18</div>
-                    <div class="stat-label">Stock Bajo</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">56</div>
-                    <div class="stat-label">Nuevos Ingresos</div>
-                </div>
             </div>
 
             <!-- Opciones Principales -->
@@ -661,45 +620,17 @@
                     <span class="option-icon">📋</span>
                     <h3>Catálogo Completo</h3>
                     <p>Consulte y administre todo el inventario de refacciones con filtros y búsqueda avanzada.</p>
-                    <!-- CORREGIDO: Usar h:link en lugar de h:button -->
-                    <h:link value="Ver Catálogo" outcome="catalogo" styleClass="option-btn" />
+
+                    <!-- Reemplazamos h:link por h:form + h:commandLink -->
+                    <h:form>
+                        <h:commandLink value="Ver Catálogo"
+                                       action="#{catalogoBean.irACatalogo}"
+                                       styleClass="option-btn" />
+                    </h:form>
                 </div>
+
             </div>
 
-            <!-- Gestión de Categorías -->
-            <div class="secondary-section">
-                <h3 class="section-title">Gestión de Categorías</h3>
-                <div class="secondary-grid">
-                    <div class="secondary-card">
-                        <span class="secondary-icon">📁</span>
-                        <h4>Categorías</h4>
-                        <h:link value="Administrar" outcome="gestionar-categorias" styleClass="secondary-link" />
-                    </div>
-                    <div class="secondary-card">
-                        <span class="secondary-icon">🏷️</span>
-                        <h4>Marcas</h4>
-                        <h:link value="Gestionar" outcome="gestionar-marcas" styleClass="secondary-link" />
-                    </div>
-                    <div class="secondary-card">
-                        <span class="secondary-icon">🔧</span>
-                        <h4>Aplicaciones</h4>
-                        <h:link value="Configurar" outcome="gestionar-aplicaciones" styleClass="secondary-link" />
-                    </div>
-                </div>
-            </div>
-
-            <!-- Acciones Rápidas -->
-            <div class="quick-actions">
-                <h3 class="section-title">Acciones Rápidas</h3>
-                <div class="actions-grid">
-                    <h:link value="Consulta Rápida" outcome="consulta-rapida" styleClass="action-btn" />
-                    <h:link value="Stock Mínimo" outcome="stock-minimo" styleClass="action-btn" />
-                    <h:link value="Productos Nuevos" outcome="productos-nuevos" styleClass="action-btn" />
-                    <h:link value="Reporte Diario" outcome="reporte-diario" styleClass="action-btn" />
-                    <h:link value="Importar Datos" outcome="importar-datos" styleClass="action-btn" />
-                    <h:link value="Exportar Lista" outcome="exportar-lista" styleClass="action-btn" />
-                </div>
-            </div>
         </div>
     </body>
 </html>

@@ -1,25 +1,27 @@
 package com.refaccionaria.proveedoresInternos.models;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Map;
 
 /**
  *
  * @author RMD
  */
-public class Producto implements Serializable{
-    
-    private String id;
+public class Producto implements Serializable {
+
+    private String id;                // _id de Mongo
     private String codigoProducto;
     private String nombre;
     private String marca;
     private String categoria;
-    private double precio;
-    private Map<String, String> caracteristicas;
-    private Date fechaCreacion;
-    private Date ultimaActualizacion;
+    private double precioCompra;
+    private double precioVenta;
+    private String caracteristicas;   // en tu BD es un String, no un Map
+    private String estatus;
+    private String fechaCreacion;     // guardas la fecha como String
+    private String fechaActualizacion;
+    private String imagenRuta;        // nombre del archivo de imagen
 
+    // --- Getters y Setters ---
     public String getId() {
         return id;
     }
@@ -60,38 +62,59 @@ public class Producto implements Serializable{
         this.categoria = categoria;
     }
 
-    public double getPrecio() {
-        return precio;
+    public double getPrecioCompra() {
+        return precioCompra;
     }
 
-    public void setPrecio(double precio) {
-        this.precio = precio;
+    public void setPrecioCompra(double precioCompra) {
+        this.precioCompra = precioCompra;
     }
 
-    public Map<String, String> getCaracteristicas() {
+    public double getPrecioVenta() {
+        return precioVenta;
+    }
+
+    public void setPrecioVenta(double precioVenta) {
+        this.precioVenta = precioVenta;
+    }
+
+    public String getCaracteristicas() {
         return caracteristicas;
     }
 
-    public void setCaracteristicas(Map<String, String> caracteristicas) {
+    public void setCaracteristicas(String caracteristicas) {
         this.caracteristicas = caracteristicas;
     }
 
-    public Date getFechaCreacion() {
+    public String getEstatus() {
+        return estatus;
+    }
+
+    public void setEstatus(String estatus) {
+        this.estatus = estatus;
+    }
+
+    public String getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
+    public void setFechaCreacion(String fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public Date getUltimaActualizacion() {
-        return ultimaActualizacion;
+    public String getFechaActualizacion() {
+        return fechaActualizacion;
     }
 
-    public void setUltimaActualizacion(Date ultimaActualizacion) {
-        this.ultimaActualizacion = ultimaActualizacion;
+    public void setFechaActualizacion(String fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
     }
-    
-    
-    
+
+    public String getImagenRuta() {
+        return imagenRuta;
+    }
+
+    public void setImagenRuta(String imagenRuta) {
+        this.imagenRuta = imagenRuta;
+    }
 }

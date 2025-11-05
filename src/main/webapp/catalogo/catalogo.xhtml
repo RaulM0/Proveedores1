@@ -1,114 +1,127 @@
 <!DOCTYPE html>
-<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+<html lang="es"
+      xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <h:head>
-        <title>Catalogo de Productos</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-        <h:outputStylesheet name="css/catalogo.css"/>
-        <!-- Incluir Font Awesome desde CDN -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<h:head>
+    <title>Catálogo de Productos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
+    <h:outputStylesheet name="css/catalogo.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</h:head>
 
-    </h:head>
-    <h:body>
-        <!-- Overlay para moviles -->
-        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<h:body>
+    <!-- Overlay para móviles -->
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-        <div class="app-container">
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <div class="sidebar-header">
-                    <h2>Filtros</h2>
-                    <button class="toggle-btn" onclick="toggleSidebar()">
-                        <i class="fas fa-times"></i>
-                    </button>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Filtros</h2>
+                <button class="toggle-btn" onclick="toggleSidebar()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <ul class="category-list">
+                <li class="category-item">
+                    <h:commandLink styleClass="category-link"
+                                   action="#{catalogoBean.filtrarPorCategoria('Motor')}">
+                        <i class="fas fa-cog"></i> Motor
+                    </h:commandLink>
+                </li>
+                <li class="category-item">
+                    <h:commandLink styleClass="category-link"
+                                   action="#{catalogoBean.filtrarPorCategoria('Transmision')}">
+                        <i class="fas fa-exchange-alt"></i> Transmisión
+                    </h:commandLink>
+                </li>
+                <li class="category-item">
+                    <h:commandLink styleClass="category-link"
+                                   action="#{catalogoBean.filtrarPorCategoria('Sistema de frenos')}">
+                        <i class="fas fa-stop-circle"></i> Sistema de frenos
+                    </h:commandLink>
+                </li>
+                <li class="category-item">
+                    <h:commandLink styleClass="category-link"
+                                   action="#{catalogoBean.filtrarPorCategoria('Suspension y direccion')}">
+                        <i class="fas fa-car-side"></i> Suspensión y dirección
+                    </h:commandLink>
+                </li>
+                <li class="category-item">
+                    <h:commandLink styleClass="category-link"
+                                   action="#{catalogoBean.filtrarPorCategoria('Escape y emisiones')}">
+                        <i class="fas fa-wind"></i> Escape y emisiones
+                    </h:commandLink>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- Botón para mostrar sidebar -->
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Encabezado -->
+            <header class="main-header">
+                <div class="header-top">
+                    <h1 class="header-title">Catálogo de Refacciones</h1>
+                    <h:link value="Volver" outcome="menu_catalogo" styleClass="btn-volver"/>
                 </div>
 
-                <ul class="category-list">
-                    <li class="category-item">
-                        <h:commandLink styleClass="category-link" action="#{catalogoBean.filtrarPorCategoria('Motor')}">
-                            <i class="fas fa-cog"></i> Motor
-                        </h:commandLink>
-                    </li>
-                    <li class="category-item">
-                        <h:commandLink styleClass="category-link" action="#{catalogoBean.filtrarPorCategoria('Transmision')}">
-                            <i class="fas fa-exchange-alt"></i> Transmision
-                        </h:commandLink>
-                    </li>
-                    <li class="category-item">
-                        <h:commandLink styleClass="category-link" action="#{catalogoBean.filtrarPorCategoria('Sistema de frenos')}">
-                            <i class="fas fa-stop-circle"></i> Sistema de frenos
-                        </h:commandLink>
-                    </li>
-                    <li class="category-item">
-                        <h:commandLink styleClass="category-link" action="#{catalogoBean.filtrarPorCategoria('Suspension y direccion')}">
-                            <i class="fas fa-car-side"></i> Suspension y direccion
-                        </h:commandLink>
-                    </li>
-                    <li class="category-item">
-                        <h:commandLink styleClass="category-link" action="#{catalogoBean.filtrarPorCategoria('Escape y emisiones')}">
-                            <i class="fas fa-wind"></i> Escape y emisiones
-                        </h:commandLink>
-                    </li>
-                </ul>
-            </aside>
+                <h:form id="searchForm">
+                    <div class="search-container">
+                        <h:inputText id="searchInput"
+                                     value="#{catalogoBean.terminoBusqueda}"
+                                     styleClass="search-input">
+                            <f:passThroughAttribute name="placeholder"
+                                                    value="Buscar productos..."/>
+                        </h:inputText>
 
-            <!-- Contenido Principal -->
-            <main class="main-content">
-                <!-- Boton para mostrar sidebar -->
-                <button class="sidebar-toggle" onclick="toggleSidebar()">
-                    <i class="fas fa-bars"></i>
-                </button>
-
-                <!-- Header -->
-                <header class="main-header">
-                    <div class="header-top">
-                        <h1 class="header-title">Catalogo de Refacciones</h1>
-                        <h:link value="Volver" outcome="menu_catalogo" styleClass="btn-volver"/>
+                        <h:commandButton id="searchBtn" value="Buscar"
+                                         action="#{catalogoBean.buscarProductos}"
+                                         styleClass="search-btn"/>
                     </div>
-                    <h:form id="searchForm">
-                        <div class="search-container">
-                            <h:inputText id="searchInput" value="#{catalogoBean.terminoBusqueda}" 
-                                         styleClass="search-input">
-                                <f:passThroughAttribute name="placeholder" value="Buscar productos..." />
-                            </h:inputText>
+                </h:form>
+            </header>
 
-                            <h:commandButton id="searchBtn" value="Buscar" action="#{catalogoBean.buscarProductos}"
-                                             styleClass="search-btn">
-                            </h:commandButton>
-                        </div>
-                    </h:form>
-                </header>
-
-                <!-- Grid de Productos -->
+            <!-- Grid de productos -->
+            <h:form id="catalogoForm">
                 <section class="products-grid">
-                    <ui:repeat value="#{catalogoBean.productosFiltrados}" var="producto">
+                    <ui:repeat value="#{catalogoBean.productosFiltrados}" var="producto" varStatus="estado">
                         <div class="product-card fade-in">
+
+                            <!-- Etiqueta -->
                             <ui:fragment rendered="#{not empty catalogoBean.getEtiqueta(producto)}">
                                 <div class="product-badge">
                                     #{catalogoBean.getEtiqueta(producto)}
                                 </div>
                             </ui:fragment>
 
+                            <!-- Imagen -->
                             <div class="product-image">
-                                <i class="#{catalogoBean.getIcono(producto)}"></i>
+                                <h:graphicImage value="#{catalogoBean.getImagenUrl(producto)}"
+                                                alt="#{producto.nombre}"
+                                                width="150" height="150"
+                                                style="border-radius:8px; border:1px solid #ccc;"/>
                             </div>
 
+                            <!-- Información -->
                             <div class="product-info">
                                 <h3 class="product-title">#{producto.nombre}</h3>
-                                <p class="product-description">
-                                    <strong>Marca:</strong> #{producto.marca} | 
-                                    <strong>Categoria:</strong> #{producto.categoria}
-                                </p>
-                                <p class="product-description">
-                                    <strong>Codigo:</strong> #{producto.codigoProducto}
-                                </p>
+                                <p><strong>Marca:</strong> #{producto.marca}</p>
+                                <p><strong>Categoría:</strong> #{producto.categoria}</p>
+                                <p><strong>Código:</strong> #{producto.codigoProducto}</p>
 
                                 <div class="product-meta">
-                                    <span class="product-price">$#{producto.precio}</span>
+                                    <span class="product-price">$#{producto.precioVenta}</span>
                                     <div class="product-stock">
                                         <i class="fas fa-box"></i>
                                         <span class="stock-badge #{catalogoBean.getClaseStock(producto)}">
@@ -117,15 +130,18 @@
                                     </div>
                                 </div>
 
+                                <!-- Acciones -->
                                 <div class="product-actions">
-                                    <h:commandButton value="Agregar" 
+                                    <h:commandButton id="btnAgregar_#{estado.index}"
+                                                     value="Agregar"
                                                      action="#{catalogoBean.agregarAlCarrito(producto)}"
-                                                     styleClass="btn btn-primary" 
-                                                     disabled="#{catalogoBean.getStockSimulado(producto) == 0}">
+                                                     styleClass="btn btn-primary"
+                                                     disabled="#{not catalogoBean.isProductoActivo(producto)}">
                                         <f:passThroughAttribute name="data-icon" value="cart-plus"/>
                                     </h:commandButton>
 
-                                    <h:commandButton value="Detalles" 
+                                    <h:commandButton id="btnDetalles_#{estado.index}"
+                                                     value="Detalles"
                                                      action="#{catalogoBean.verDetalles(producto)}"
                                                      styleClass="btn btn-outline">
                                         <f:passThroughAttribute name="data-icon" value="info"/>
@@ -135,56 +151,57 @@
                         </div>
                     </ui:repeat>
                 </section>
-            </main>
-        </div>
+            </h:form>
+        </main>
+    </div>
 
-        <h:outputScript>
-            function toggleSidebar() {
+    <!-- Script JS seguro con CDATA -->
+    <h:outputScript target="body">
+        <![CDATA[
+        function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
             const toggleBtn = document.querySelector('.sidebar-toggle');
 
             sidebar.classList.toggle('collapsed');
 
-            if (window.innerWidth &lt;= 768) {
-            overlay.style.display = sidebar.classList.contains('collapsed') ? 'none' : 'block';
+            if (window.innerWidth <= 768) {
+                overlay.style.display = sidebar.classList.contains('collapsed') ? 'none' : 'block';
             }
 
-            // Cambiar icono del boton toggle
             if (toggleBtn) {
-            const icon = toggleBtn.querySelector('i');
-            if (sidebar.classList.contains('collapsed')) {
-            icon.className = 'fas fa-bars';
-            } else {
-            icon.className = 'fas fa-times';
+                const icon = toggleBtn.querySelector('i');
+                icon.className = sidebar.classList.contains('collapsed')
+                    ? 'fas fa-bars'
+                    : 'fas fa-times';
             }
-            }
-            }
+        }
 
-            document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const categoryLinks = document.querySelectorAll('.category-link');
             categoryLinks.forEach(link => {
-            link.addEventListener('click', function() {
-            if (window.innerWidth &lt;= 768) {
-            toggleSidebar();
-            }
-            });
-            });
+                link.addEventListener('click', function () {
+                    if (window.innerWidth <= 768) {
+                        toggleSidebar();
+                    }
+                });
             });
 
-            document.addEventListener('keydown', function(e) {
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (overlay) {
+                overlay.addEventListener('click', toggleSidebar);
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
-            const sidebar = document.querySelector('.sidebar');
-            if (!sidebar.classList.contains('collapsed')) {
-            toggleSidebar();
+                const sidebar = document.querySelector('.sidebar');
+                if (!sidebar.classList.contains('collapsed')) {
+                    toggleSidebar();
+                }
             }
-            }
-            });
-
-            // Cerrar sidebar al hacer clic en el overlay
-            document.querySelector('.sidebar-overlay').addEventListener('click', function() {
-            toggleSidebar();
-            });
-        </h:outputScript>
-    </h:body>
+        });
+        ]]>
+    </h:outputScript>
+</h:body>
 </html>
