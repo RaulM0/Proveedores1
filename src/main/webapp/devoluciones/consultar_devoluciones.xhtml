@@ -1,15 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
--->
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <h:head>
+        <title>Consulta de Devoluciones</title>
+        <!-- Enlazamos una nueva hoja de estilos para esta página -->
+        <h:outputStylesheet name="css/consulta.css" />
+    </h:head>
+
+    <h:body>
+
+        <div class="navbar">
+            <div class="navbar-brand">
+                <span class="brand-icon">🏢</span>
+                <span class="brand-name">Sistema de Gestión Proveedores</span>
+            </div>
+            <div class="navbar-menu">
+                <div class="user-menu">
+                    <span class="user-icon">👤</span>
+                    <span class="user-name">#{sessionBean.nombreUsuario}</span>
+                    <div class="dropdown-menu">
+                        <h:form>
+                            <h:commandLink action="#{sessionBean.miCuenta}" styleClass="dropdown-item">
+                                <span class="dropdown-icon">⚙️</span> Mi Cuenta
+                            </h:commandLink>
+                            <h:commandLink action="#{sessionBean.configuracion}" styleClass="dropdown-item">
+                                <span class="dropdown-icon">🔧</span> Configuración
+                            </h:commandLink>
+                            <div class="dropdown-divider"></div>
+                            <h:commandLink action="#{sessionBean.logout}" styleClass="dropdown-item logout">
+                                <span class="dropdown-icon">🚪</span> Cerrar Sesión
+                            </h:commandLink>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="header">
+                <h1>Consulta de Devoluciones</h1>
+                <p>Historial y búsqueda de todas las devoluciones registradas.</p>
+                <!-- Botón para volver al menú principal -->
+                <h:link value="Volver" outcome="menu_devoluciones" styleClass="btn-volver"/>
+            </div>
+
+            <!-- Mensajes Globales -->
+            <h:messages id="mensajes" globalOnly="true" 
+                        styleClass="messages"
+                        errorClass="msg-error" 
+                        infoClass="msg-info" />
+
+            <!-- === BARRA DE FILTROS === -->
+            <h:form id="formFiltros">
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <h:outputLabel value="Folio (Venta o Devolución):" for="folio"/>
+                        <h:inputText id="folio" value="#{consultaDevolucionesBean.filtroFolio}" 
+                                     styleClass="input-filtro"/>
+                    </div>
+
+                    <div class="filter-group">
+                        <h:outputLabel value="Estado:" for="estado"/>
+                        <h:selectOneMenu id="estado" value="#{consultaDevolucionesBean.filtroEstado}"
+                                         styleClass="select-filtro">
+                            <f:selectItem itemLabel="Todos" itemValue="" />
+                            <f:selectItem itemLabel="Pendiente" itemValue="Pendiente" />
+                            <f:selectItem itemLabel="Procesada" itemValue="Procesada" />
+                            <f:selectItem itemLabel="Rechazada" itemValue="Rechazada" />
+                        </h:selectOneMenu>
+                    </div>
+
+                    <div class="filter-group">
+                        <h:outputLabel value="Fecha Desde:" for="fechaDesde"/>
+                        <h:inputText id="fechaDesde" value="#{consultaDevolucionesBean.filtroFechaDesde}" 
+                                     styleClass="input-filtro" pt:placeholder="dd/mm/aaaa"/>
+                    </div>
+
+                    <div class="filter-group">
+                        <h:outputLabel value="Fecha Hasta:" for="fechaHasta"/>
+                        <h:inputText id="fechaHasta" value="#{consultaDevolucionesBean.filtroFechaHasta}" 
+                                     styleClass="input-filtro" pt:placeholder="dd/mm/aaaa"/>
+                    </div>
+
+                    <div class="filter-actions">
+                        <h:commandButton value="Limpiar" action="#{consultaDevolucionesBean.limpiarFiltros}"
+                                         styleClass="btn-limpiar">
+                            <!-- Limpia este formulario y refresca la tabla -->
+                            <f:ajax execute="@this" render=":formFiltros :formResultados:tablaDevoluciones" />
+                        </h:commandButton>
+                        <h:commandButton value="Buscar" action="#{consultaDevolucionesBean.buscar}"
+                                         styleClass="btn-buscar">
+                            <!-- Ejecuta la búsqueda y refresca solo la tabla y los mensajes -->
+                            <f:ajax execute="@form" render=":formResultados:tablaDevoluciones :mensajes" />
+                        </h:commandButton>
+                    </div>
+                </div>
+            </h:form>
+
+            <!-- === TABLA DE RESULTADOS === -->
+            <h:form id="formResultados">
+                <div class="tabla-wrapper">
+                    <!-- La tabla se renderiza con la lista 'resultados' del nuevo bean -->
+                    <h:dataTable id="tablaDevoluciones" 
+                                 value="#{consultaDevolucionesBean.resultados}" var="dev"
+                                 styleClass="tabla-datos" 
+                                 rowClasses="fila-par, fila-impar"
+                                 headerClass="tabla-header"
+                                 rendered="#{not empty consultaDevolucionesBean.resultados}">
+
+                        <h:column>
+                            <f:facet name="header">Folio Devolución</f:facet>
+                            <span class="col-folio">#{dev.devolucionId}</span>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Folio Venta</f:facet>
+                                #{dev.folioVenta}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Fecha</f:facet>
+                            <h:outputText value="#{dev.fecha}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Monto</f:facet>
+                            <h:outputText value="#{dev.totalReembolsado}" styleClass="col-monto">
+                                <f:convertNumber type="currency" currencySymbol="$" />
+                            </h:outputText>
+                        </h:column>
+
+                        <!-- Columna clave: ESTADO -->
+                        <h:column>
+                            <f:facet name="header">Estado</f:facet>
+                            <!-- 
+                              Usamos una clase de estilo dinámica basada en el estado
+                              para cambiar el color de la etiqueta.
+                            -->
+                            <span class="etiqueta-estado estado-#{consultaDevolucionesBean.normalizarEstado(dev.estado)}">
+                                #{dev.estado}
+                            </span>
+                        </h:column>
+
+                    </h:dataTable>
+                </div>
+
+                <!-- Mensaje si la búsqueda no arroja resultados -->
+                <h:outputText value="No se encontraron devoluciones con esos criterios." 
+                              styleClass="msg-vacio"
+                              rendered="#{empty consultaDevolucionesBean.resultados}" />
+            </h:form>
+        </div>
+    </h:body>
 </html>
