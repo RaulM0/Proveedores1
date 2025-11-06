@@ -1,0 +1,401 @@
+/* ======================================= */
+/* BASE Y CONTENEDOR */
+/* (Estilos consistentes con reembolsos.css) */
+/* ======================================= */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+    text-align: center;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.header h1 {
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.header p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.btn-volver {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 25px;
+    background: #6c757d; /* Gris secundario */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-volver:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* ======================================= */
+/* BARRA DE FILTROS (NUEVO) */
+/* ======================================= */
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los filtros pasen abajo en móviles */
+    gap: 20px;
+    padding: 25px;
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    align-items: flex-end; /* Alinea los items en la parte inferior */
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 180px; /* Flex-grow, flex-shrink, flex-basis */
+}
+
+.filter-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2B6777; /* Color oscuro del tema */
+}
+
+.input-filtro,
+.select-filtro {
+    padding: 10px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    background: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.input-filtro:focus,
+.select-filtro:focus {
+    outline: none;
+    border-color: #52B69A; /* Verde principal */
+    box-shadow: 0 0 0 3px rgba(82, 182, 154, 0.1);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+    flex: 1 1 200px; /* Ocupa espacio y se alinea */
+    justify-content: flex-end;
+}
+
+.btn-buscar,
+.btn-limpiar {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-buscar {
+    background-color: #52B69A; /* Verde principal */
+}
+.btn-buscar:hover {
+    background-color: #409c80;
+    transform: translateY(-2px);
+}
+
+.btn-limpiar {
+    background-color: #6c757d; /* Gris secundario */
+}
+.btn-limpiar:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* ======================================= */
+/* TABLA DE DATOS (COPIADO DE REEMBOLSOS) */
+/* ======================================= */
+.tabla-wrapper {
+    overflow-x: auto;
+}
+.tabla-datos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+.tabla-header {
+    background-color: #2B6777; /* Color oscuro */
+    color: white;
+    font-weight: 600;
+    text-align: left;
+}
+.tabla-datos th,
+.tabla-datos td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+.fila-par { background-color: #f8f9fa; }
+.fila-impar { background-color: #ffffff; }
+.tabla-datos tr:hover .fila-par,
+.tabla-datos tr:hover .fila-impar {
+    background-color: #e6f7f3;
+}
+.col-folio {
+    font-weight: 600;
+    color: #2B6777;
+}
+.col-monto {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #333;
+    white-space: nowrap;
+}
+
+/* ======================================= */
+/* ETIQUETAS DE ESTADO (NUEVO) */
+/* ======================================= */
+.etiqueta-estado {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+}
+
+.estado-pendiente {
+    background-color: #ffc107; /* Amarillo */
+    color: #333;
+}
+
+.estado-procesada,
+.estado-aprobada {
+    background-color: #28a745; /* Verde */
+}
+
+.estado-rechazada {
+    background-color: #dc3545; /* Rojo */
+}
+
+/* ======================================= */
+/* MENSAJES (COPIADO DE REEMBOLSOS) */
+/* ======================================= */
+.msg-vacio {
+    display: block;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    padding: 40px;
+    border: 2px dashed #e0e0e0;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+.messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.msg-info {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #e6f7f3;
+    color: #2B6777;
+    border: 1px solid #52B69A;
+}
+.msg-error {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+
+/* ======================================= */
+/* BARRA DE NAVEGACIÓN SUPERIOR */
+/* ======================================= */
+
+.navbar {
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(135deg, #1a4d5c 0%, #2B6777 100%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.brand-icon {
+    font-size: 1.5em;
+}
+
+.brand-name {
+    letter-spacing: 0.5px;
+}
+.navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-menu:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.user-icon {
+    font-size: 1.3em;
+}
+
+.user-name {
+    font-weight: 500;
+    font-size: 0.95em;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+.user-menu:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.95em;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.dropdown-item:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.dropdown-item:last-child {
+    border-radius: 0 0 8px 8px;
+}
+
+.dropdown-item:hover {
+    background: #f8f9fa;
+}
+
+.dropdown-item.logout {
+    color: #dc3545;
+}
+
+.dropdown-item.logout:hover {
+    background: #fff5f5;
+}
+
+.dropdown-icon {
+    font-size: 1.1em;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: #e9ecef;
+    margin: 5px 0;
+}
+/* Estilo para links tipo botón en navbar */
+.navbar-brand .btn-volver {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #2B6777; /* Color principal */
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    margin-left: 1rem; /* Separación del texto de marca */
+}
+
+.navbar-brand .btn-volver:hover {
+    background-color: #3a56d4; /* Color más oscuro al pasar el mouse */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}

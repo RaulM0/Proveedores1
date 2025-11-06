@@ -7,11 +7,13 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 // Importa los modelos desde tu paquete de modelos
 import com.refaccionaria.proveedoresInternos.models.Devolucion;
 import com.refaccionaria.proveedoresInternos.models.DevolucionDetalle;
 import java.util.ArrayList;
+import java.util.Calendar;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.bson.conversions.Bson;
 
 /**
  * Servicio para manejar la lógica de negocio de las devoluciones. 1. Guarda la
@@ -213,5 +216,73 @@ public class DevolucionService {
         return dev;
     }
 
-// --- AQUÍ TERMINAN LOS MÉTODOS NUEVOS ---
+    /**
+     * (NUEVO) Busca en el historial de devoluciones usando filtros dinámicos.
+     * Llamado por el ConsultaDevolucionesBean.
+     */
+    public List<Devolucion> buscarDevoluciones(String folio, String estado, Date fechaDesde, Date fechaHasta) {
+        
+        List<Devolucion> lista = new ArrayList<>();
+        List<Bson> filtros = new ArrayList<>(); // Lista para construir la consulta
+
+        // --- Construcción de la consulta dinámica ---
+
+        // 1. Filtro por Folio (Busca en dos campos: folioVenta o devolucionId)
+        if (folio != null && !folio.trim().isEmpty()) {
+            filtros.add(Filters.or(
+                Filters.regex("devolucionId", folio, "i"), // "i" para ignorar mayúsc/minúsc
+                Filters.regex("folioVenta", folio, "i")
+            ));
+        }
+        
+        // 2. Filtro por Estado
+        if (estado != null && !estado.trim().isEmpty()) {
+            filtros.add(Filters.eq("estado", estado));
+        }
+
+        // 3. Filtro por Fecha Desde (>=)
+        if (fechaDesde != null) {
+            filtros.add(Filters.gte("fecha", fechaDesde)); // gte = Greater Than or Equal
+        }
+
+        // 4. Filtro por Fecha Hasta (<=)
+        if (fechaHasta != null) {
+            // Ajuste para incluir el día completo (hasta las 23:59:59)
+            Calendar c = Calendar.getInstance();
+            c.setTime(fechaHasta);
+            c.add(Calendar.DAY_OF_MONTH, 1); // Se mueve al siguiente día
+            c.add(Calendar.MILLISECOND, -1); // Retrocede 1 milisegundo (23:59:59.999)
+            
+            filtros.add(Filters.lte("fecha", c.getTime())); // lte = Less Than or Equal
+        }
+
+        // --- Ejecución de la consulta ---
+        MongoCursor<Document> cursor;
+        
+        if (filtros.isEmpty()) {
+            // Si no hay filtros, trae todo (o limita los resultados)
+            cursor = coleccionDevoluciones.find()
+                    .sort(Sorts.descending("fecha")) // Ordena por fecha descendente
+                    .limit(100) // Limita a 100 para no saturar
+                    .iterator();
+        } else {
+            // Si hay filtros, los combina con AND
+            cursor = coleccionDevoluciones.find(Filters.and(filtros))
+                    .sort(Sorts.descending("fecha"))
+                    .limit(100)
+                    .iterator();
+        }
+
+        // --- Mapeo de resultados ---
+        try {
+            while (cursor.hasNext()) {
+                // Reutilizamos el mapeador que ya teníamos
+                lista.add(mapDocumentToDevolucion(cursor.next()));
+            }
+        } finally {
+            cursor.close();
+        }
+        
+        return lista;
+    }
 }
