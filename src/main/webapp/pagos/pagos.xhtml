@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <h:head>
     <title>Gestión de Pagos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,30 +41,41 @@
         </div>
     </div>
     <div class="main-container">
-        <div class="filters-card">
-            <div class="filter-group">
-                <h:outputLabel for="search-venta" value="ID de Venta / Referencia" />
-                <h:inputText id="search-venta" value="#{pagosBean.terminoBusqueda}" placeholder="Ej: V-00123..." />
+        <h:form>
+            <div class="filters-card">
+                <div class="filter-group">
+                    <h:outputLabel for="search-venta" value="Buscar (Venta/Folio/Referencia)" />
+                    <h:inputText id="search-venta" value="#{pagosBean.terminoBusqueda}"
+                        placeholder="Ej: V-00123, REF-HSBC-98765..." styleClass="filter-input" />
+                </div>
+                <div class="filter-group">
+                    <h:outputLabel for="filter-estado" value="Estado del Pago" />
+                    <h:selectOneMenu id="filter-estado" value="#{pagosBean.estadoFiltro}" styleClass="filter-select">
+                        <f:selectItem itemLabel="Todos los estados" itemValue="" />
+                        <f:selectItem itemLabel="Pendiente" itemValue="Pendiente" />
+                        <f:selectItem itemLabel="Completado" itemValue="Completado" />
+                        <f:selectItem itemLabel="Cancelado" itemValue="Cancelado" />
+                    </h:selectOneMenu>
+                </div>
+                <div class="filter-group">
+                    <h:outputLabel for="filter-fecha" value="Fecha específica" />
+                    <h:inputText id="filter-fecha" value="#{pagosBean.fechaFiltro}" type="date"
+                        styleClass="filter-input" />
+                </div>
+                <div class="filter-actions">
+                    <h:commandButton value="Buscar" action="#{pagosBean.buscarPagos}" styleClass="btn-filter">
+                        <f:ajax execute="@form" render="@form :messages" />
+                    </h:commandButton>
+                    <h:commandButton value="Limpiar" action="#{pagosBean.limpiarFiltros}" styleClass="btn-clear">
+                        <f:ajax execute="@form" render="@form :messages" />
+                    </h:commandButton>
+                </div>
             </div>
-            <div class="filter-group">
-                <h:outputLabel for="filter-estado" value="Estado del Pago" />
-                <h:selectOneMenu id="filter-estado" value="#{pagosBean.estadoFiltro}">
-                    <f:selectItem itemLabel="Todos" itemValue="" />
-                    <f:selectItem itemLabel="Pendiente" itemValue="pendiente" />
-                    <f:selectItem itemLabel="Confirmado" itemValue="confirmado" />
-                    <f:selectItem itemLabel="Rechazado" itemValue="rechazado" />
-                </h:selectOneMenu>
-            </div>
-            <div class="filter-group">
-                <h:outputLabel for="filter-fecha" value="Rango de Fechas" />
-                <h:inputText id="filter-fecha" value="#{pagosBean.fechaFiltro}" type="date" />
-            </div>
-            <h:commandButton value="Buscar" action="#{pagosBean.buscarPagos}" styleClass="btn-filter">
-                <f:facet name="label">
-                    <i class="fas fa-search"></i> Buscar
-                </f:facet>
-            </h:commandButton>
-        </div>
+
+            <!-- Mensajes de feedback -->
+            <h:messages id="messages" globalOnly="true" styleClass="messages" infoClass="message-info"
+                warnClass="message-warn" errorClass="message-error" />
+        </h:form>
         <h:form enctype="multipart/form-data">
             <div class="payments-table-container">
                 <table class="payments-table">
@@ -89,9 +101,8 @@
                                 <td>#{pago.referenciaBanco}</td>
                                 <td>$ #{pago.monto}</td>
                                 <td>
-                                    <span class="status-badge status-#{pago.estado}">
-                                        #{pago.estado eq 'pendiente' ? 'Pendiente' : (pago.estado eq 'confirmado' ?
-                                        'Confirmado' : 'Rechazado')}
+                                    <span class="status-badge status-#{fn:toLowerCase(pago.estado)}">
+                                        #{pago.estado}
                                     </span>
                                 </td>
                                 <td style="text-align: center;">
@@ -133,11 +144,12 @@
                             </div>
                             <div class="detail-item">
                                 <h:outputLabel value="Estado Actual" />
-                                <span><span class="status-badge status-#{pagosBean.pagoSeleccionado.estado}">
-                                        #{pagosBean.pagoSeleccionado.estado eq 'pendiente' ? 'Pendiente' :
-                                        (pagosBean.pagoSeleccionado.estado eq 'confirmado' ? 'Confirmado' :
-                                        'Rechazado')}
-                                    </span></span>
+                                <span>
+                                    <span
+                                        class="status-badge status-#{fn:toLowerCase(pagosBean.pagoSeleccionado.estado)}">
+                                        #{pagosBean.pagoSeleccionado.estado}
+                                    </span>
+                                </span>
                             </div>
                             <div class="detail-item">
                                 <h:outputLabel value="Referencia Bancaria" />

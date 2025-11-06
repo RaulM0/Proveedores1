@@ -21,6 +21,9 @@
     </header>
 
     <main>
+        <h:form>
+            <h:messages globalOnly="false" layout="table" />
+        </h:form>
         <div class="detail-card">
             <h:graphicImage value="#{inventarioBean.detalleImagen}" alt="Imagen Producto"
                 style="max-width:120px;max-height:120px;border-radius:8px;" />
@@ -28,55 +31,22 @@
                 <h2>#{inventarioBean.detalleNombre}</h2>
                 <p><b>Identificador:</b> #{inventarioBean.detalleId}</p>
                 <p><b>Ubicación:</b> #{inventarioBean.detalleUbicacion}</p>
-                <p><b>Descripción:</b> #{inventarioBean.detalleDescripcion}</p>
                 <p><b>Stock Mínimo:</b> #{inventarioBean.detalleMinimo}</p>
                 <p><b>Stock Máximo:</b> #{inventarioBean.detalleMaximo}</p>
+                <p><b>Estado:</b>
+                    <span class="status #{inventarioBean.estadoClass(inventarioBean.selectedInventario)}">
+                        #{inventarioBean.estadoLabel(inventarioBean.selectedInventario)}
+                    </span>
+                </p>
             </div>
         </div>
 
-        <div class="action-buttons">
-            <h:commandButton value="Historial" action="#{inventarioBean.mostrarHistorial}" styleClass="historial-btn" />
-            <h:commandButton value="Modificar Stock Máximo y Mínimo" action="#{inventarioBean.modificarStock}"
-                styleClass="edit-btn" />
-        </div>
-
-        <h:panelGroup rendered="#{inventarioBean.historialVisible}">
-            <div class="table-container">
-                <div class="table-controls">
-                    <div class="search-bar">
-                        <h:inputText value="#{inventarioBean.terminoBusquedaHistorial}"
-                            placeholder="Buscar movimiento..." />
-                        <h:commandButton value="Buscar" action="#{inventarioBean.buscarHistorial}" />
-                    </div>
-                    <div>
-                        <h:commandButton value="Crear Reporte" action="#{inventarioBean.crearReporte}"
-                            styleClass="create-report" />
-                    </div>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Motivo</th>
-                            <th>Stock Actual</th>
-                            <th>Stock Anterior</th>
-                            <th>Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ui:repeat value="#{inventarioBean.historialMovimientos}" var="mov">
-                            <tr>
-                                <td>#{mov.producto}</td>
-                                <td>#{mov.motivo}</td>
-                                <td>#{mov.stockActual}</td>
-                                <td>#{mov.stockAnterior}</td>
-                                <td>#{mov.fecha}</td>
-                            </tr>
-                        </ui:repeat>
-                    </tbody>
-                </table>
+        <h:form>
+            <div class="action-buttons">
+                <h:commandButton value="Modificar Stock Máximo y Mínimo" action="#{inventarioBean.modificarStock}"
+                    styleClass="edit-btn" />
             </div>
-        </h:panelGroup>
+        </h:form>
     </main>
 </h:body>
 

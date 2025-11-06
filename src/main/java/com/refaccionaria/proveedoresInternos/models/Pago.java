@@ -1,20 +1,26 @@
 
 package com.refaccionaria.proveedoresInternos.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- *
+ * Modelo para pagos asociados a ventas
+ * 
  * @author RMD
  */
-public class Pago {
+public class Pago implements Serializable {
 
-    private String id;
-    private String ventaId;
+    private static final long serialVersionUID = 1L;
+
+    private String id; // _id de MongoDB
+    private String ventaId; // ObjectId de la venta
+    private String folioVenta; // Folio de la venta (para referencia)
     private Date fecha;
     private String referenciaBanco;
     private double monto;
-    private String estado; // Pendiente, Confirmado, Rechazado
+    private String metodoPago; // Efectivo, Transferencia, Tarjeta
+    private String estado; // Completado, Pendiente, Cancelado
     private String comprobante;
 
     public String getComprobante() {
@@ -23,6 +29,22 @@ public class Pago {
 
     public void setComprobante(String comprobante) {
         this.comprobante = comprobante;
+    }
+
+    public String getFolioVenta() {
+        return folioVenta;
+    }
+
+    public void setFolioVenta(String folioVenta) {
+        this.folioVenta = folioVenta;
+    }
+
+    public String getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
     }
 
     public String getId() {
