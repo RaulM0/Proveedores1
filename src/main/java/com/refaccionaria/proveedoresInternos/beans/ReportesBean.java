@@ -2,7 +2,7 @@ package com.refaccionaria.proveedoresInternos.beans;
 
 import com.refaccionaria.proveedoresInternos.devoluciones.VentaService;
 import com.refaccionaria.proveedoresInternos.models.Venta;
-import com.refaccionaria.proveedoresInternos.pagos.PagoService;
+import com.refaccionaria.proveedoresInternos.services.PagoService;
 import com.refaccionaria.proveedoresInternos.services.DevolucionService; // ✅ nuevo import
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.context.FacesContext;
@@ -52,7 +52,7 @@ public class ReportesBean {
             headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
             Row header = sheet.createRow(0);
-            String[] columnas = {"Folio", "Usuario", "Fecha", "Estado", "Total"};
+            String[] columnas = { "Folio", "Usuario", "Fecha", "Estado", "Total" };
             for (int i = 0; i < columnas.length; i++) {
                 Cell cell = header.createCell(i);
                 cell.setCellValue(columnas[i]);
@@ -69,7 +69,8 @@ public class ReportesBean {
                 row.createCell(4).setCellValue(v.getTotal());
             }
 
-            for (int i = 0; i < columnas.length; i++) sheet.autoSizeColumn(i);
+            for (int i = 0; i < columnas.length; i++)
+                sheet.autoSizeColumn(i);
 
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.getExternalContext().responseReset();
@@ -110,9 +111,9 @@ public class ReportesBean {
 
             PdfPTable table = new PdfPTable(5);
             table.setWidthPercentage(100);
-            table.setWidths(new float[]{2, 2, 3, 2, 2});
+            table.setWidths(new float[] { 2, 2, 3, 2, 2 });
 
-            String[] headers = {"Folio", "Usuario", "Fecha", "Estado", "Total"};
+            String[] headers = { "Folio", "Usuario", "Fecha", "Estado", "Total" };
             for (String h : headers) {
                 PdfPCell cell = new PdfPCell(new Phrase(h, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11)));
                 cell.setBackgroundColor(new Color(230, 230, 230));
@@ -134,7 +135,8 @@ public class ReportesBean {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.getExternalContext().responseReset();
             fc.getExternalContext().setResponseContentType("application/pdf");
-            fc.getExternalContext().setResponseHeader("Content-Disposition", "attachment; filename=\"reporte_ventas.pdf\"");
+            fc.getExternalContext().setResponseHeader("Content-Disposition",
+                    "attachment; filename=\"reporte_ventas.pdf\"");
             OutputStream os = fc.getExternalContext().getResponseOutputStream();
             baos.writeTo(os);
             os.flush();
@@ -166,9 +168,9 @@ public class ReportesBean {
 
             PdfPTable table = new PdfPTable(6);
             table.setWidthPercentage(100);
-            table.setWidths(new float[]{2, 2, 2, 2, 2, 3});
+            table.setWidths(new float[] { 2, 2, 2, 2, 2, 3 });
 
-            String[] headers = {"Folio Venta", "Método", "Fecha", "Monto", "Estado", "Referencia Banco"};
+            String[] headers = { "Folio Venta", "Método", "Fecha", "Monto", "Estado", "Referencia Banco" };
             for (String h : headers) {
                 PdfPCell cell = new PdfPCell(new Phrase(h, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11)));
                 cell.setBackgroundColor(new Color(230, 230, 230));
@@ -202,7 +204,8 @@ public class ReportesBean {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.getExternalContext().responseReset();
             fc.getExternalContext().setResponseContentType("application/pdf");
-            fc.getExternalContext().setResponseHeader("Content-Disposition", "attachment; filename=\"reporte_pagos.pdf\"");
+            fc.getExternalContext().setResponseHeader("Content-Disposition",
+                    "attachment; filename=\"reporte_pagos.pdf\"");
             OutputStream os = fc.getExternalContext().getResponseOutputStream();
             baos.writeTo(os);
             os.flush();
@@ -234,9 +237,9 @@ public class ReportesBean {
 
             PdfPTable table = new PdfPTable(6);
             table.setWidthPercentage(100);
-            table.setWidths(new float[]{2, 2, 2, 3, 2, 2});
+            table.setWidths(new float[] { 2, 2, 2, 3, 2, 2 });
 
-            String[] headers = {"ID Devolución", "Folio Venta", "Motivo", "Estado", "Fecha", "Total Reembolsado"};
+            String[] headers = { "ID Devolución", "Folio Venta", "Motivo", "Estado", "Fecha", "Total Reembolsado" };
             for (String h : headers) {
                 PdfPCell cell = new PdfPCell(new Phrase(h, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11)));
                 cell.setBackgroundColor(new Color(230, 230, 230));
@@ -270,7 +273,8 @@ public class ReportesBean {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.getExternalContext().responseReset();
             fc.getExternalContext().setResponseContentType("application/pdf");
-            fc.getExternalContext().setResponseHeader("Content-Disposition", "attachment; filename=\"reporte_devoluciones.pdf\"");
+            fc.getExternalContext().setResponseHeader("Content-Disposition",
+                    "attachment; filename=\"reporte_devoluciones.pdf\"");
             OutputStream os = fc.getExternalContext().getResponseOutputStream();
             baos.writeTo(os);
             os.flush();

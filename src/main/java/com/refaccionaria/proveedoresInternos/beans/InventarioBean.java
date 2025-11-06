@@ -395,13 +395,16 @@ public class InventarioBean implements Serializable {
     }
 
     private Producto buscarProducto(String productoId) {
-        if (catalogoBean == null)
+        if (productoId == null || productoId.isBlank())
             return null;
-        if (catalogoBean.getProductos() == null)
+        if (catalogoBean == null || catalogoBean.getProductos() == null)
             return null;
         for (Producto p : catalogoBean.getProductos()) {
-            if (p.getId() != null && p.getId().equals(productoId))
+            // Coincidir por _id o por codigoProducto según de dónde venga el valor
+            if ((p.getId() != null && p.getId().equals(productoId)) ||
+                    (p.getCodigoProducto() != null && p.getCodigoProducto().equals(productoId))) {
                 return p;
+            }
         }
         return null;
     }
@@ -412,7 +415,12 @@ public class InventarioBean implements Serializable {
      */
     public String nombreProducto(String productoId) {
         Producto p = buscarProducto(productoId);
-        return (p != null && p.getNombre() != null && !p.getNombre().isBlank()) ? p.getNombre() : productoId;
+        if (p == null)
+            return productoId; // fallback
+        String nombre = p.getNombre();
+        if (nombre == null || nombre.isBlank())
+            return productoId;
+        return nombre;
     }
 
     /**
@@ -421,10 +429,17 @@ public class InventarioBean implements Serializable {
      */
     public String nombreProductoDisplay(String productoId) {
         Producto p = buscarProducto(productoId);
-        if (p != null && p.getNombre() != null && !p.getNombre().isBlank()) {
-            return p.getNombre() + " (" + productoId + ")";
+        if (p == null)
+            return productoId;
+        String nombre = p.getNombre();
+        if (nombre == null || nombre.isBlank())
+            return productoId;
+        // Si productoId es el codigoProducto mostrar "Nombre (Código)"
+        String codigo = p.getCodigoProducto();
+        if (codigo != null && !codigo.isBlank()) {
+            return nombre + " (" + codigo + ")";
         }
-        return productoId;
+        return nombre;
     }
 
     /**
@@ -657,7 +672,12 @@ public class InventarioBean implements Serializable {
         if (selectedInventario == null)
             return "";
         Producto p = buscarProducto(selectedInventario.getProductoId());
-        return p != null ? p.getNombre() : selectedInventario.getProductoId();
+        if (p == null)
+            return selectedInventario.getProductoId();
+        String nombre = p.getNombre();
+        if (nombre == null || nombre.isBlank())
+            return selectedInventario.getProductoId();
+        return nombre;
     }
 
     public String getDetalleImagen() {

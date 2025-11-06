@@ -28,8 +28,8 @@
             <h:graphicImage value="#{inventarioBean.detalleImagen}" alt="Imagen Producto"
                 style="max-width:120px;max-height:120px;border-radius:8px;" />
             <div class="product-info">
-                <h2>#{inventarioBean.detalleNombre}</h2>
-                <p><b>Identificador:</b> #{inventarioBean.detalleId}</p>
+                <h2>#{inventarioBean.selectedInventario.productoId}</h2>
+                <p><b>Identificador Inventario:</b> #{inventarioBean.detalleId}</p>
                 <p><b>Ubicación:</b> #{inventarioBean.detalleUbicacion}</p>
                 <p><b>Stock Mínimo:</b> #{inventarioBean.detalleMinimo}</p>
                 <p><b>Stock Máximo:</b> #{inventarioBean.detalleMaximo}</p>

@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="main-container">
-        <h:form>
+        <h:form id="filtrosForm">
             <div class="filters-card">
                 <div class="filter-group">
                     <h:outputLabel for="search-venta" value="Buscar (Venta/Folio/Referencia)" />
@@ -64,10 +64,10 @@
                 </div>
                 <div class="filter-actions">
                     <h:commandButton value="Buscar" action="#{pagosBean.buscarPagos}" styleClass="btn-filter">
-                        <f:ajax execute="@form" render="@form :messages" />
+                        <f:ajax execute="@form" render="messages tablaContainer" />
                     </h:commandButton>
                     <h:commandButton value="Limpiar" action="#{pagosBean.limpiarFiltros}" styleClass="btn-clear">
-                        <f:ajax execute="@form" render="@form :messages" />
+                        <f:ajax execute="@form" render="messages tablaContainer" />
                     </h:commandButton>
                 </div>
             </div>
@@ -75,52 +75,58 @@
             <!-- Mensajes de feedback -->
             <h:messages id="messages" globalOnly="true" styleClass="messages" infoClass="message-info"
                 warnClass="message-warn" errorClass="message-error" />
-        </h:form>
-        <h:form enctype="multipart/form-data">
-            <div class="payments-table-container">
-                <table class="payments-table">
-                    <thead>
-                        <tr>
-                            <th>ID Venta</th>
-                            <th>Fecha</th>
-                            <th>Referencia Banco</th>
-                            <th>Monto</th>
-                            <th>Estado</th>
-                            <th>Comprobante</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ui:repeat value="#{pagosBean.pagos}" var="pago">
+
+            <!-- Tabla de pagos -->
+            <h:panelGroup id="tablaContainer">
+                <div class="payments-table-container">
+                    <table class="payments-table">
+                        <thead>
                             <tr>
-                                <td>#{pago.ventaId}</td>
-                                <td>
-                                    <h:outputText value="#{pago.fecha}">
-                                        <f:convertDateTime pattern="dd/MM/yyyy" />
-                                    </h:outputText>
-                                </td>
-                                <td>#{pago.referenciaBanco}</td>
-                                <td>$ #{pago.monto}</td>
-                                <td>
-                                    <span class="status-badge status-#{fn:toLowerCase(pago.estado)}">
-                                        #{pago.estado}
-                                    </span>
-                                </td>
-                                <td style="text-align: center;">
-                                    <h:commandLink action="#{pagosBean.verDetalle(pago)}" styleClass="icon-comprobante">
-                                        <ui:fragment rendered="#{not empty pago.comprobante}">
-                                            <span class="fa fa-file-pdf-o">Ver Detalles</span>
-                                        </ui:fragment>
-                                        <ui:fragment rendered="#{empty pago.comprobante}">
-                                            <span class="fa fa-file-o">Ver Detalles</span>
-                                        </ui:fragment>
-                                    </h:commandLink>
-                                </td>
+                                <th>ID Venta</th>
+                                <th>Fecha</th>
+                                <th>Referencia Banco</th>
+                                <th>Monto</th>
+                                <th>Estado</th>
+                                <th>Comprobante</th>
                             </tr>
-                        </ui:repeat>
-                    </tbody>
-                </table>
-            </div>
-            <!-- Modal de detalles del pago -->
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{pagosBean.pagos}" var="pago">
+                                <tr>
+                                    <td>#{pago.ventaId}</td>
+                                    <td>
+                                        <h:outputText value="#{pago.fecha}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </td>
+                                    <td>#{pago.referenciaBanco}</td>
+                                    <td>$ #{pago.monto}</td>
+                                    <td>
+                                        <span class="status-badge status-#{fn:toLowerCase(pago.estado)}">
+                                            #{pago.estado}
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <h:commandLink action="#{pagosBean.verDetalle(pago)}"
+                                            styleClass="icon-comprobante">
+                                            <ui:fragment rendered="#{not empty pago.comprobante}">
+                                                <span class="fa fa-file-pdf-o">Ver Detalles</span>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{empty pago.comprobante}">
+                                                <span class="fa fa-file-o">Ver Detalles</span>
+                                            </ui:fragment>
+                                        </h:commandLink>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </h:panelGroup>
+        </h:form>
+
+        <!-- Modal de detalles del pago -->
+        <h:form id="modalForm" enctype="multipart/form-data">
             <h:panelGroup rendered="#{pagosBean.modalVisible}">
                 <div id="payment-modal" class="modal-overlay" style="display:flex;">
                     <div class="modal-content">
@@ -180,9 +186,13 @@
                         </div>
                         <div class="modal-footer">
                             <h:commandButton value="Rechazar Pago" action="#{pagosBean.rechazarPago}"
-                                styleClass="btn btn-reject" />
+                                styleClass="btn btn-reject">
+                                <f:ajax execute="@form" render=":filtrosForm:tablaContainer :filtrosForm:messages" />
+                            </h:commandButton>
                             <h:commandButton value="Confirmar Pago" action="#{pagosBean.confirmarPago}"
-                                styleClass="btn btn-confirm" />
+                                styleClass="btn btn-confirm">
+                                <f:ajax execute="@form" render=":filtrosForm:tablaContainer :filtrosForm:messages" />
+                            </h:commandButton>
                         </div>
                     </div>
                 </div>

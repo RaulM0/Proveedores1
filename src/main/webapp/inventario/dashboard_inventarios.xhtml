@@ -103,7 +103,9 @@
                         <ui:repeat value="#{inventarioBean.inventariosFiltrados}" var="inv">
                             <tr>
                                 <td>#{inv.id}</td>
-                                <td>#{inventarioBean.nombreProductoDisplay(inv.productoId)}</td>
+                                <td>
+                                    #{inv.productoId}
+                                </td>
                                 <td>#{inv.stock}</td>
                                 <td>#{inv.minimo}</td>
                                 <td>

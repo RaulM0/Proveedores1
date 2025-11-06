@@ -1,4 +1,4 @@
-package com.refaccionaria.proveedoresInternos.pagos;
+package com.refaccionaria.proveedoresInternos.services;
 
 import com.mongodb.client.*;
 import com.mongodb.client.model.Sorts;
