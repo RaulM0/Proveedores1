@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import com.refaccionaria.proveedoresInternos.services.ActividadService;
 
 @Named("DevolucionBean")
 @ViewScoped
@@ -78,69 +79,86 @@ public class DevolucionBean implements Serializable {
 
     // --- ACCIÓN PRINCIPAL (CORREGIDA Y COMPLETADA) ---
     // Esta es la lógica que faltaba en tu versión
-    public String realizarDevolucion() {
-        
-        // --- 1. Validaciones (Tu código estaba bien) ---
-        if (productosSeleccionados == null || productosSeleccionados.length == 0) {
-            addErrorMessage("Error de Validación", "Debe seleccionar al menos un producto para devolver.");
-            return null; 
-        }
-        if (ventaEncontrada == null) {
-            addErrorMessage("Error de Validación", "Debe buscar y cargar una venta válida primero.");
-            return null;
-        }
+public String realizarDevolucion() {
 
-        // --- 2. Preparar el Objeto Devolucion ---
-        Devolucion nuevaDevolucion = new Devolucion();
-        nuevaDevolucion.setDevolucionId(this.devolucionId);
-        nuevaDevolucion.setVentaId(this.ventaEncontrada.get_id()); // ID de la venta
-        nuevaDevolucion.setFolioVenta(this.ventaEncontrada.getFolio_venta()); // Folio de la venta
-        nuevaDevolucion.setFecha(new Date()); 
-        nuevaDevolucion.setMotivo(this.motivo);
-        nuevaDevolucion.setEstado(this.estado); // "Pendiente de Reembolso"
-        
-        List<DevolucionDetalle> detalleDevolucion = new ArrayList<>();
-        double totalReembolsadoCalculado = 0.0;
+    if (productosSeleccionados == null || productosSeleccionados.length == 0) {
+        addErrorMessage("Error de Validación", "Debe seleccionar al menos un producto para devolver.");
+        return null;
+    }
+    if (ventaEncontrada == null) {
+        addErrorMessage("Error de Validación", "Debe buscar y cargar una venta válida primero.");
+        return null;
+    }
 
-        // --- 3. Calcular el total y el detalle ---
-        for (String idProductoSeleccionado : productosSeleccionados) {
-            // Busca el producto seleccionado dentro de la venta original
-            for (VentaDetalle itemVenta : ventaEncontrada.getDetalle()) {
-                
-                if (itemVenta.getProducto_id().equals(idProductoSeleccionado)) {
-                    
-                    // a. Sumar al total a reembolsar
-                    totalReembolsadoCalculado += itemVenta.getSubtotal();
-                    
-                    // b. Crear el detalle para el documento de devolución
-                    DevolucionDetalle det = new DevolucionDetalle();
-                    det.setProducto_id(itemVenta.getProducto_id());
-                    det.setNombre(itemVenta.getNombre());
-                    det.setCantidadDevuelta(itemVenta.getCantidad()); // Asume la línea completa
-                    det.setPrecioUnitario(itemVenta.getPrecio_unitario());
-                    det.setSubtotalDevuelto(itemVenta.getSubtotal());
-                    detalleDevolucion.add(det);
-                    
-                    break; // Rompemos el bucle interno, ya encontramos este ID
-                }
+    Devolucion nuevaDevolucion = new Devolucion();
+    nuevaDevolucion.setDevolucionId(this.devolucionId);
+    nuevaDevolucion.setVentaId(this.ventaEncontrada.get_id());
+    nuevaDevolucion.setFolioVenta(this.ventaEncontrada.getFolio_venta());
+    nuevaDevolucion.setFecha(new Date());
+    nuevaDevolucion.setMotivo(this.motivo);
+    nuevaDevolucion.setEstado(this.estado);
+
+    List<DevolucionDetalle> detalleDevolucion = new ArrayList<>();
+    double totalReembolsadoCalculado = 0.0;
+
+    for (String idProductoSeleccionado : productosSeleccionados) {
+        for (VentaDetalle itemVenta : ventaEncontrada.getDetalle()) {
+            if (itemVenta.getProducto_id().equals(idProductoSeleccionado)) {
+                totalReembolsadoCalculado += itemVenta.getSubtotal();
+
+                DevolucionDetalle det = new DevolucionDetalle();
+                det.setProducto_id(itemVenta.getProducto_id());
+                det.setNombre(itemVenta.getNombre());
+                det.setCantidadDevuelta(itemVenta.getCantidad());
+                det.setPrecioUnitario(itemVenta.getPrecio_unitario());
+                det.setSubtotalDevuelto(itemVenta.getSubtotal());
+                detalleDevolucion.add(det);
+                break;
             }
         }
-        
-        nuevaDevolucion.setDetalle(detalleDevolucion);
-        nuevaDevolucion.setTotalReembolsado(totalReembolsadoCalculado);
-
-        // --- 4. LLAMAR AL SERVICIO PARA GUARDAR EN BD Y ACTUALIZAR STOCK ---
-        boolean exito = devolucionService.registrarDevolucion(nuevaDevolucion);
-
-        if (exito) {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-            addInfoMessage("Devolución Registrada", "Folio " + nuevaDevolucion.getDevolucionId() + " guardado. Stock actualizado.");
-            return "menu_devoluciones?faces-redirect=true";
-        } else {
-            addErrorMessage("Error en Base de Datos", "No se pudo guardar la devolución. Revise los logs.");
-            return null; // Se queda en la página
-        }
     }
+
+    nuevaDevolucion.setDetalle(detalleDevolucion);
+    nuevaDevolucion.setTotalReembolsado(totalReembolsadoCalculado);
+
+    boolean exito = devolucionService.registrarDevolucion(nuevaDevolucion);
+
+    if (exito) {
+        // 🔹 Registrar actividad en historial
+        try {
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            Object userObj = ctx.getExternalContext().getSessionMap().get("usuarioActual");
+            String usuarioId = "desconocido";
+
+if (userObj instanceof com.refaccionaria.proveedoresInternos.models.Usuario) {
+    com.refaccionaria.proveedoresInternos.models.Usuario u =
+        (com.refaccionaria.proveedoresInternos.models.Usuario) userObj;
+    if (u.getUsuario() != null) {
+        usuarioId = u.getUsuario();
+    }
+}
+
+
+            ActividadService actividadService = new ActividadService();
+            actividadService.registrarActividad(
+                "Devolución registrada - Folio " + nuevaDevolucion.getDevolucionId(),
+                usuarioId
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        addInfoMessage("Devolución Registrada",
+            "Folio " + nuevaDevolucion.getDevolucionId() + " guardado. Stock actualizado.");
+        return "menu_devoluciones?faces-redirect=true";
+    } else {
+        addErrorMessage("Error en Base de Datos", "No se pudo guardar la devolución. Revise los logs.");
+        return null;
+    }
+}
+
 
     public String cancelar() {
         return "menu_devoluciones?faces-redirect=true";

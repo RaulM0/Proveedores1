@@ -1,160 +1,37 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="jakarta.faces.facelets">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
-    <title>Registro de Actividad - Sistema de Gestión</title>
+    <title>Registro de Actividad</title>
     <style>
-        body {
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .card {
-            width: 850px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-            padding: 25px;
-        }
-        .card h2 {
-            background-color: #2b6d75;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            text-align: left;
-            padding: 8px;
-        }
-        th {
-            background-color: #e9e9e9;
-        }
-        .filters {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-        }
-        .form-input {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-        .buttons {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 20px;
-        }
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            color: white;
-            font-weight: bold;
-        }
-        .btn-consultar {
-            background-color: #2b6d75;
-        }
-        .btn-regresar {
-            background-color: #777;
-        }
+        body { background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .card { width: 850px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); padding: 25px; }
+        .card h2 { background-color: #2b6d75; color: white; text-align: center; padding: 10px; border-radius: 6px; margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #2b6d75; color: white; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; background-color: #2b6d75; margin-top: 15px; }
+        .btn-back { background-color: #777; }
     </style>
 </h:head>
 
 <h:body>
+    <f:event type="preRenderView" listener="#{registroActividadBean.verificarAccesoAdmin}" />
+
     <div class="card">
         <h2>Registro de Actividad</h2>
 
+        <h:dataTable value="#{registroActividadBean.listaActividades}" var="a" style="width:100%">
+            <h:column><f:facet name="header">Fecha</f:facet> #{a.fecha}</h:column>
+            <h:column><f:facet name="header">Operación</f:facet> #{a.operacion}</h:column>
+            <h:column><f:facet name="header">Usuario</f:facet> #{a.usuario}</h:column>
+        </h:dataTable>
+
         <h:form>
-            <!-- Tabla con datos simulados -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Operación</th>
-                        <th>Usuario</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2025-10-01</td>
-                        <td>Venta</td>
-                        <td>Juan Pérez</td>
-                    </tr>
-                    <tr>
-                        <td>2025-10-02</td>
-                        <td>Pago</td>
-                        <td>María López</td>
-                    </tr>
-                    <tr>
-                        <td>2025-10-03</td>
-                        <td>Devolución</td>
-                        <td>Administrador</td>
-                    </tr>
-                    <tr>
-                        <td>2025-10-04</td>
-                        <td>Venta</td>
-                        <td>José Martínez</td>
-                    </tr>
-                    <tr>
-                        <td>2025-10-05</td>
-                        <td>Pago</td>
-                        <td>Ana Torres</td>
-                    </tr>
-                    <tr>
-                        <td>2025-10-06</td>
-                        <td>Devolución</td>
-                        <td>Juan Pérez</td>
-                    </tr>
-                    <tr>
-                        <td>2025-10-07</td>
-                        <td>Venta</td>
-                        <td>María López</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- Filtros -->
-            <div class="filters">
-                <span>Gestionado por:</span>
-
-                <h:selectOneMenu styleClass="form-input">
-                    <f:selectItem itemLabel="Operación" itemValue=""/>
-                    <f:selectItem itemLabel="Venta" itemValue="Venta"/>
-                    <f:selectItem itemLabel="Pago" itemValue="Pago"/>
-                    <f:selectItem itemLabel="Devolución" itemValue="Devolución"/>
-                </h:selectOneMenu>
-
-                <h:selectOneMenu styleClass="form-input">
-                    <f:selectItem itemLabel="Usuario" itemValue=""/>
-                    <f:selectItem itemLabel="Juan Pérez" itemValue="juan"/>
-                    <f:selectItem itemLabel="María López" itemValue="maria"/>
-                    <f:selectItem itemLabel="Administrador" itemValue="admin"/>
-                    <f:selectItem itemLabel="José Martínez" itemValue="jose"/>
-                    <f:selectItem itemLabel="Ana Torres" itemValue="ana"/>
-                </h:selectOneMenu>
-
-                <h:commandButton value="Consultar" styleClass="btn btn-consultar"/>
-            </div>
-
-            <div class="buttons">
-                <h:button value="Regresar" outcome="/dashboard" styleClass="btn btn-regresar"/>
-            </div>
+            <h:commandButton value="Recargar" action="#{registroActividadBean.cargarActividades}" styleClass="btn"/>
+            <h:button value="Regresar" outcome="/dashboard.xhtml" styleClass="btn btn-back"/>
         </h:form>
     </div>
 </h:body>

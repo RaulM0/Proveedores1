@@ -2,6 +2,8 @@ package com.refaccionaria.proveedoresInternos.beans;
 
 import jakarta.servlet.http.Part;
 import com.refaccionaria.proveedoresInternos.models.Pago;
+import com.refaccionaria.proveedoresInternos.models.Usuario;
+import com.refaccionaria.proveedoresInternos.services.ActividadService;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -96,22 +98,15 @@ public class PagosBean implements Serializable {
         for (Pago pago : pagos) {
             boolean coincide = true;
 
-            // Filtro por término de búsqueda (busca en ventaId, folioVenta y
-            // referenciaBanco)
             if (terminoBusqueda != null && !terminoBusqueda.trim().isEmpty()) {
                 String termino = terminoBusqueda.toLowerCase();
                 boolean encontrado = false;
 
-                // Búsqueda en ventaId
                 if (pago.getVentaId() != null && pago.getVentaId().toLowerCase().contains(termino)) {
                     encontrado = true;
-                }
-                // Búsqueda en folioVenta
-                else if (pago.getFolioVenta() != null && pago.getFolioVenta().toLowerCase().contains(termino)) {
+                } else if (pago.getFolioVenta() != null && pago.getFolioVenta().toLowerCase().contains(termino)) {
                     encontrado = true;
-                }
-                // Búsqueda en referenciaBanco
-                else if (pago.getReferenciaBanco() != null
+                } else if (pago.getReferenciaBanco() != null
                         && pago.getReferenciaBanco().toLowerCase().contains(termino)) {
                     encontrado = true;
                 }
@@ -119,19 +114,16 @@ public class PagosBean implements Serializable {
                 coincide = encontrado;
             }
 
-            // Filtro por estado
             if (coincide && estadoFiltro != null && !estadoFiltro.isEmpty()) {
                 coincide = estadoFiltro.equalsIgnoreCase(pago.getEstado());
             }
 
-            // Filtro por fecha
             if (coincide && fechaFiltro != null && !fechaFiltro.isEmpty()) {
                 try {
                     java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
                     java.util.Date fechaSeleccionada = sdf.parse(fechaFiltro);
 
                     if (pago.getFecha() != null) {
-                        // Comparar solo la fecha (ignorar horas)
                         java.util.Calendar calFiltro = java.util.Calendar.getInstance();
                         calFiltro.setTime(fechaSeleccionada);
                         calFiltro.set(java.util.Calendar.HOUR_OF_DAY, 0);
@@ -152,7 +144,6 @@ public class PagosBean implements Serializable {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    // Si hay error al parsear la fecha, ignorar este filtro
                 }
             }
 
@@ -165,7 +156,6 @@ public class PagosBean implements Serializable {
     public void buscarPagos() {
         actualizarFiltrados();
 
-        // Mensaje informativo sobre resultados
         int resultados = pagosFiltrados.size();
         if (resultados == 0) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -205,6 +195,9 @@ public class PagosBean implements Serializable {
             actualizarPagoEnDB(pagoSeleccionado);
             actualizarFiltrados();
 
+            // ✅ Registrar actividad
+            registrarActividad("Pago confirmado");
+
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Pago confirmado",
                             "El pago ha sido confirmado exitosamente."));
@@ -218,10 +211,23 @@ public class PagosBean implements Serializable {
             actualizarPagoEnDB(pagoSeleccionado);
             actualizarFiltrados();
 
+            // ✅ Registrar actividad
+            registrarActividad("Pago rechazado");
+
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_WARN, "Pago rechazado",
                             "El pago ha sido rechazado."));
             cerrarModal();
+        }
+    }
+
+    // ✅ Nuevo método para registrar actividades
+    private void registrarActividad(String operacion) {
+        FacesContext ctx = FacesContext.getCurrentInstance();
+        Usuario usuario = (Usuario) ctx.getExternalContext().getSessionMap().get("usuarioActual");
+
+        if (usuario != null) {
+            new ActividadService().registrarActividad(operacion, usuario.getUsuario());
         }
     }
 
@@ -238,7 +244,7 @@ public class PagosBean implements Serializable {
 
             coll.updateOne(
                     new Document("_id", new org.bson.types.ObjectId(pago.getId())),
-                    new Document("", doc));
+                    new Document("$set", doc));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -278,76 +284,34 @@ public class PagosBean implements Serializable {
         }
     }
 
-    public Part getArchivoComprobante() {
-        return archivoComprobante;
-    }
-
-    public void setArchivoComprobante(Part archivoComprobante) {
-        this.archivoComprobante = archivoComprobante;
-    }
-
-    public List<Pago> getPagos() {
-        return pagosFiltrados;
-    }
-
-    public String getTerminoBusqueda() {
-        return terminoBusqueda;
-    }
-
-    public void setTerminoBusqueda(String terminoBusqueda) {
-        this.terminoBusqueda = terminoBusqueda;
-    }
-
-    public String getEstadoFiltro() {
-        return estadoFiltro;
-    }
-
-    public void setEstadoFiltro(String estadoFiltro) {
-        this.estadoFiltro = estadoFiltro;
-    }
-
-    public String getFechaFiltro() {
-        return fechaFiltro;
-    }
-
-    public void setFechaFiltro(String fechaFiltro) {
-        this.fechaFiltro = fechaFiltro;
-    }
-
-    public boolean isModalVisible() {
-        return modalVisible;
-    }
-
-    public Pago getPagoSeleccionado() {
-        return pagoSeleccionado;
-    }
-
-    public void setPagoSeleccionado(Pago pagoSeleccionado) {
-        this.pagoSeleccionado = pagoSeleccionado;
-    }
+    // 🔹 Getters & Setters
+    public Part getArchivoComprobante() { return archivoComprobante; }
+    public void setArchivoComprobante(Part archivoComprobante) { this.archivoComprobante = archivoComprobante; }
+    public List<Pago> getPagos() { return pagosFiltrados; }
+    public String getTerminoBusqueda() { return terminoBusqueda; }
+    public void setTerminoBusqueda(String terminoBusqueda) { this.terminoBusqueda = terminoBusqueda; }
+    public String getEstadoFiltro() { return estadoFiltro; }
+    public void setEstadoFiltro(String estadoFiltro) { this.estadoFiltro = estadoFiltro; }
+    public String getFechaFiltro() { return fechaFiltro; }
+    public void setFechaFiltro(String fechaFiltro) { this.fechaFiltro = fechaFiltro; }
+    public boolean isModalVisible() { return modalVisible; }
+    public Pago getPagoSeleccionado() { return pagoSeleccionado; }
+    public void setPagoSeleccionado(Pago pagoSeleccionado) { this.pagoSeleccionado = pagoSeleccionado; }
 
     public double getTotalPagos() {
-        return pagos.stream()
-                .filter(p -> "Completado".equals(p.getEstado()))
-                .mapToDouble(Pago::getMonto)
-                .sum();
+        return pagos.stream().filter(p -> "Completado".equals(p.getEstado()))
+                .mapToDouble(Pago::getMonto).sum();
     }
 
     public int getPagosCompletados() {
-        return (int) pagos.stream()
-                .filter(p -> "Completado".equals(p.getEstado()))
-                .count();
+        return (int) pagos.stream().filter(p -> "Completado".equals(p.getEstado())).count();
     }
 
     public int getPagosPendientes() {
-        return (int) pagos.stream()
-                .filter(p -> "Pendiente".equals(p.getEstado()))
-                .count();
+        return (int) pagos.stream().filter(p -> "Pendiente".equals(p.getEstado())).count();
     }
 
     public int getPagosCancelados() {
-        return (int) pagos.stream()
-                .filter(p -> "Cancelado".equals(p.getEstado()))
-                .count();
+        return (int) pagos.stream().filter(p -> "Cancelado".equals(p.getEstado())).count();
     }
 }

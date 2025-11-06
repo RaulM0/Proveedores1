@@ -285,4 +285,20 @@ public class DevolucionService {
         
         return lista;
     }
+    public List<org.bson.Document> listarDevoluciones() {
+    List<org.bson.Document> lista = new ArrayList<>();
+    try (MongoCursor<org.bson.Document> cursor = coleccionDevoluciones
+            .find()
+            .sort(Sorts.descending("fecha"))
+            .iterator()) {
+
+        while (cursor.hasNext()) {
+            lista.add(cursor.next());
+        }
+
+    } catch (Exception e) {
+        LOGGER.log(Level.SEVERE, "Error al listar devoluciones para reporte", e);
+    }
+    return lista;
+}
 }

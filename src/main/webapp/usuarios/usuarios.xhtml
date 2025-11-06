@@ -58,31 +58,29 @@
             color: white;
             font-weight: bold;
         }
-        .btn-cancelar {
-            background-color: #777;
-        }
-        .btn-guardar {
-            background-color: #2b6d75;
-        }
+        .btn-cancelar { background-color: #777; }
+        .btn-guardar { background-color: #2b6d75; }
     </style>
 </h:head>
 
 <h:body>
+    <!-- 🔒 Verificación de acceso -->
+    <f:event type="preRenderView" listener="#{usuariosBean.verificarAccesoAdmin}" />
+
     <div class="card">
         <h2>Gestión de Usuarios y Roles</h2>
 
-        <h:form>
+        <h:form id="formUsuarios">
             <!-- Selector de usuario -->
             <div class="form-group" style="margin-bottom: 20px;">
                 <label for="usuario">Seleccionar usuario:</label>
                 <h:selectOneMenu id="usuario"
                                  value="#{usuariosBean.usuarioSeleccionado}"
-                                 valueChangeListener="#{usuariosBean.cargarDatosUsuario}"
-                                 onchange="submit()"
                                  styleClass="form-input">
                     <f:selectItem itemLabel="Seleccione un usuario" itemValue=""/>
                     <f:selectItems value="#{usuariosBean.listaUsuarios}" var="u"
                                    itemValue="#{u.usuario}" itemLabel="#{u.nombre}"/>
+                    <f:ajax listener="#{usuariosBean.cargarDatosUsuario}" render="@form" />
                 </h:selectOneMenu>
             </div>
 

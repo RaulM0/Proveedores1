@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
+
 <h:head>
     <title>Menú de Reportes - Sistema de Gestión</title>
     <style>
@@ -49,18 +50,23 @@
             display: block;
             margin-bottom: 10px;
         }
-        .menu-link {
-            display: inline-block;
-            margin-top: 10px;
-            background-color: #2b6d75;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
+        .report-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .btn-pdf {
+            border: none;
             border-radius: 6px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            background-color: #d32f2f;
             transition: background-color 0.3s;
         }
-        .menu-link:hover {
-            background-color: #1e4f55;
+        .btn-pdf:hover {
+            background-color: #a61e1e;
         }
         .btn-regresar {
             margin-top: 30px;
@@ -79,40 +85,56 @@
         <h2>Menú de Reportes</h2>
 
         <div class="menu-grid">
-            <!-- Reporte de Ventas -->
+
+            <!-- 💰 Reporte de Ventas -->
             <div class="menu-item">
                 <span class="menu-icon">💰</span>
-                <h3>Consultar Ventas</h3>
-                <p>Visualiza las ventas registradas, totales y estados de pedidos.</p>
-                <h:link outcome="/reportes/consultar_ventas" value="Acceder" styleClass="menu-link" />
+                <h3>Reporte de Ventas</h3>
+                <p>Genera el informe completo de ventas registradas.</p>
+
+                <h:form>
+                    <div class="report-buttons">
+                        <h:commandButton value="📄 Generar PDF"
+                                         styleClass="btn-pdf"
+                                         action="#{reportesBean.generarVentasPDF}" />
+                    </div>
+                </h:form>
             </div>
 
-            <!-- Reporte de Pagos -->
+            <!-- 💳 Reporte de Pagos -->
             <div class="menu-item">
                 <span class="menu-icon">💳</span>
-                <h3>Consultar Pagos</h3>
-                <p>Consulta los pagos realizados y genera reportes financieros.</p>
-                <h:link outcome="/reportes/consultar_pagos" value="Acceder" styleClass="menu-link" />
+                <h3>Reporte de Pagos</h3>
+                <p>Genera el informe detallado de pagos realizados.</p>
+
+                <h:form>
+                    <div class="report-buttons">
+                        <h:commandButton value="📄 Generar PDF"
+                                         styleClass="btn-pdf"
+                                         action="#{reportesBean.generarPagosPDF}" />
+                    </div>
+                </h:form>
             </div>
 
-            <!-- Reporte de Devoluciones -->
+            <!-- 🔄 Reporte de Devoluciones -->
             <div class="menu-item">
                 <span class="menu-icon">🔄</span>
-                <h3>Consultar Devoluciones</h3>
-                <p>Analiza las devoluciones y motivos registrados en el sistema.</p>
-                <h:link outcome="/reportes/consultar_devoluciones" value="Acceder" styleClass="menu-link" />
-            </div>
+                <h3>Reporte de Devoluciones</h3>
+                <p>Genera el informe de devoluciones y sus motivos.</p>
 
-            <!-- Reporte de Clientes -->
-            <div class="menu-item">
-                <span class="menu-icon">👥</span>
-                <h3>Consultar Clientes</h3>
-                <p>Consulta el historial de compras y comportamiento de clientes.</p>
-                <h:link outcome="/reportes/consultar_clientes" value="Acceder" styleClass="menu-link" />
+                <h:form>
+                    <div class="report-buttons">
+                        <h:commandButton value="📄 Generar PDF"
+                                         styleClass="btn-pdf"
+                                         action="#{reportesBean.generarDevolucionesPDF}" />
+                    </div>
+                </h:form>
             </div>
         </div>
 
-        <h:button value="Regresar al Dashboard" outcome="/dashboard" styleClass="btn-regresar"/>
+        <h:button value="Regresar al Dashboard" 
+                  outcome="/dashboard"
+                  styleClass="btn-regresar"/>
     </div>
 </h:body>
 </html>

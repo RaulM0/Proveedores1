@@ -1,23 +1,21 @@
 package com.refaccionaria.proveedoresInternos.devoluciones;
 
 import com.mongodb.client.*;
-import com.refaccionaria.proveedoresInternos.models.VentaDetalle;
 import com.refaccionaria.proveedoresInternos.models.Venta;
+import com.refaccionaria.proveedoresInternos.models.VentaDetalle;
 import org.bson.Document;
-import java.util.ArrayList;
-import java.util.List;
+import org.bson.types.ObjectId;
+
+import java.util.*;
 import java.util.logging.Level;
-
 import java.util.logging.Logger;
-
-/**
- * --- SERVICIO REAL DE VENTA CON MONGODB --- Se conecta a la base de datos
- * 'refaccionaria' en MongoDB.
- */
+import com.mongodb.client.model.Filters;
+import org.bson.conversions.Bson;
+import com.mongodb.client.model.Filters;
+import org.bson.conversions.Bson;
+import org.bson.Document;
 public class VentaService {
 
-    // --- CONFIGURACIÓN DE CONEXIÓN ---
-    // ¡¡IMPORTANTE!! Ajusta esta línea si tu Mongo tiene usuario/contraseña
     private static final String CONNECTION_STRING = "mongodb://localhost:27017";
     private static final String DB_NAME = "refaccionaria";
     private static final String COLLECTION_NAME = "ventas";
@@ -30,115 +28,188 @@ public class VentaService {
 
     public VentaService() {
         try {
-            // Desactiva el logging detallado del driver de Mongo
             Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
-
-            this.mongoClient = MongoClients.create(CONNECTION_STRING);
-            this.database = mongoClient.getDatabase(DB_NAME);
-            this.coleccionVentas = database.getCollection(COLLECTION_NAME);
-
-            LOGGER.info("Conexión a MongoDB (" + DB_NAME + ") exitosa.");
-
+            mongoClient = MongoClients.create(CONNECTION_STRING);
+            database = mongoClient.getDatabase(DB_NAME);
+            coleccionVentas = database.getCollection(COLLECTION_NAME);
+            LOGGER.info("Conexión a MongoDB exitosa.");
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error al conectar con MongoDB", e);
         }
     }
 
-    /**
-     * Busca una Venta en la colección 'ventas' usando el campo 'folio_venta'.
-     */
-    public Venta buscarPorFolio(String folio) {
-        if (this.coleccionVentas == null) {
-            LOGGER.severe("La colección de ventas no está inicializada. Revisa la conexión a MongoDB.");
-            return null;
-        }
-
-        try {
-            Document filtro = new Document("folio_venta", folio);
-            Document ventaDoc = coleccionVentas.find(filtro).first();
-
-            if (ventaDoc != null) {
-                LOGGER.info("Venta encontrada: " + ventaDoc.toJson());
-                return mapDocumentToVenta(ventaDoc);
-            } else {
-                LOGGER.warning("No se encontró venta con folio: " + folio);
-                return null;
-            }
-
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error al buscar el folio: " + folio, e);
-            return null;
-        }
+    public String generarFolio() {
+        long totalVentas = coleccionVentas.countDocuments();
+        return String.format("V-2025-%04d", totalVentas + 1);
     }
+public List<Venta> buscarVentas(String folio, String estado, Date fechaInicio) {
+    List<Venta> resultados = new ArrayList<>();
+    List<Bson> filtros = new ArrayList<>();
 
-    /**
-     * Mapeador manual de un Document BSON a un POJO Venta. (Versión corregida
-     * para manejar Integers y Doubles de forma segura)
-     */
-    private Venta mapDocumentToVenta(Document doc) {
+    if (folio != null && !folio.isEmpty())
+        filtros.add(Filters.eq("folio_venta", folio));
+    if (estado != null && !estado.isEmpty())
+        filtros.add(Filters.eq("status", estado));
+    if (fechaInicio != null)
+        filtros.add(Filters.gte("fecha_venta", fechaInicio));
+
+    Bson filtroFinal = filtros.isEmpty() ? new Document() : Filters.and(filtros);
+
+    // 🔹 Recorremos las ventas
+    for (Document doc : coleccionVentas.find(filtroFinal)) {
         Venta venta = new Venta();
-
-        // --- Mapeo de campos simples ---
-        venta.set_id(doc.getObjectId("_id").toString());
         venta.setFolio_venta(doc.getString("folio_venta"));
-        venta.setFecha_venta(doc.getDate("fecha_venta"));
-        venta.setUsuario_id(doc.getObjectId("usuario_id").toString());
+        venta.setUsuario_id(doc.getString("usuario_id"));
         venta.setStatus(doc.getString("status"));
+        venta.setTotal(doc.getDouble("total"));
+        venta.setFecha_venta(doc.getDate("fecha_venta"));
 
-        // --- INICIO DE LA CORRECCIÓN ---
-        // Lee "total" como un tipo genérico 'Number'
-        // Esto falla en la línea 88 de tu stack trace
-        Number totalNum = doc.get("total", Number.class);
-        if (totalNum != null) {
-            // Convierte el 'Number' a 'double' (lo que espera tu POJO)
-            venta.setTotal(totalNum.doubleValue());
-        }
-        // --- FIN DE LA CORRECCIÓN ---
-
-        // --- Mapeo del sub-documento (lista) 'detalle' ---
+        // 🔹 Convertir el array "detalle" (productos vendidos)
         List<Document> detalleDocs = doc.getList("detalle", Document.class);
-        List<VentaDetalle> detalleList = new ArrayList<>();
+        List<VentaDetalle> listaDetalles = new ArrayList<>();
 
         if (detalleDocs != null) {
-            for (Document detalleDoc : detalleDocs) {
-                VentaDetalle detalle = new VentaDetalle();
-
-                detalle.setProducto_id(detalleDoc.getObjectId("producto_id").toString());
-                detalle.setNombre(detalleDoc.getString("nombre"));
-
-                // --- APLICANDO LA MISMA LÓGICA SEGURA AQUÍ ---
-                // Campo 'cantidad' (leído como Number y convertido a int)
-                Number cantidadNum = detalleDoc.get("cantidad", Number.class);
-                if (cantidadNum != null) {
-                    detalle.setCantidad(cantidadNum.intValue());
-                }
-
-                // Campo 'precio_unitario' (leído como Number y convertido a double)
-                Number precioNum = detalleDoc.get("precio_unitario", Number.class);
-                if (precioNum != null) {
-                    detalle.setPrecio_unitario(precioNum.doubleValue());
-                }
-
-                // Campo 'subtotal' (leído como Number y convertido a double)
-                Number subtotalNum = detalleDoc.get("subtotal", Number.class);
-                if (subtotalNum != null) {
-                    detalle.setSubtotal(subtotalNum.doubleValue());
-                }
-
-                detalleList.add(detalle);
+            for (Document d : detalleDocs) {
+                VentaDetalle det = new VentaDetalle();
+                if (d.get("producto_id") != null)
+                    det.setProducto_id(String.valueOf(d.get("producto_id")));
+                det.setNombre(d.getString("nombre"));
+                det.setCantidad(d.getInteger("cantidad", 0));
+                det.setPrecio_unitario(d.getDouble("precio_unitario"));
+                det.setSubtotal(d.getDouble("subtotal"));
+                listaDetalles.add(det);
             }
         }
 
-        venta.setDetalle(detalleList);
-
-        return venta;
+        venta.setDetalle(listaDetalles);
+        resultados.add(venta);
     }
 
-    // (Opcional) Método para cerrar la conexión 
-    public void cerrarConexion() {
-        if (mongoClient != null) {
-            mongoClient.close();
-            LOGGER.info("Conexión a MongoDB cerrada.");
+    return resultados;
+}
+    public void insertarVenta(Venta venta) {
+        try {
+            Document docVenta = new Document()
+                    .append("folio_venta", venta.getFolio_venta())
+                    .append("fecha_venta", Optional.ofNullable(venta.getFecha_venta()).orElse(new Date()))
+                    .append("usuario_id", venta.getUsuario_id()) // guardamos string (username o hex)
+                    .append("total", Optional.ofNullable(venta.getTotal()).orElse(0d))
+                    .append("status", Optional.ofNullable(venta.getStatus()).orElse("Completada"));
+
+            List<Document> detalleDocs = new ArrayList<>();
+            if (venta.getDetalle() != null) {
+                for (VentaDetalle d : venta.getDetalle()) {
+                    Document det = new Document();
+                    // si producto_id parece ObjectId hex válido, guardarlo como ObjectId; si no, como string
+                    if (d.getProducto_id() != null && ObjectId.isValid(d.getProducto_id())) {
+                        det.append("producto_id", new ObjectId(d.getProducto_id()));
+                    } else {
+                        det.append("producto_id", d.getProducto_id());
+                    }
+                    det.append("nombre", d.getNombre());
+                    det.append("cantidad", d.getCantidad());
+                    det.append("precio_unitario", d.getPrecio_unitario());
+                    det.append("subtotal", d.getSubtotal());
+                    detalleDocs.add(det);
+                }
+            }
+            docVenta.append("detalle", detalleDocs);
+
+            coleccionVentas.insertOne(docVenta);
+            LOGGER.info("Venta registrada correctamente: " + venta.getFolio_venta());
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al insertar venta", e);
+            throw e;
         }
+    }
+    // ============================================================
+    // 🔹 LISTAR TODAS LAS VENTAS (para reportes)
+    // ============================================================
+    public List<Venta> listarTodas() {
+        List<Venta> ventas = new ArrayList<>();
+        try {
+            for (Document doc : coleccionVentas.find()) {
+                Venta venta = new Venta();
+                ObjectId id = doc.getObjectId("_id");
+                if (id != null) venta.set_id(id.toHexString());
+                venta.setFolio_venta(doc.getString("folio_venta"));
+                venta.setFecha_venta(doc.getDate("fecha_venta"));
+                venta.setUsuario_id(
+                        doc.get("usuario_id") != null ? doc.get("usuario_id").toString() : "N/A");
+                venta.setStatus(doc.getString("status"));
+                Object rawTotal = doc.get("total");
+                venta.setTotal(rawTotal instanceof Number ? ((Number) rawTotal).doubleValue() : 0d);
+                ventas.add(venta);
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al listar ventas", e);
+        }
+        return ventas;
+    }
+
+    public Venta buscarPorFolio(String folio) {
+        try {
+            Document doc = coleccionVentas.find(new Document("folio_venta", folio)).first();
+            if (doc == null) return null;
+
+            Venta venta = new Venta();
+            ObjectId id = doc.getObjectId("_id");
+            if (id != null) venta.set_id(id.toHexString());
+
+            venta.setFolio_venta(doc.getString("folio_venta"));
+            venta.setFecha_venta(doc.getDate("fecha_venta"));
+
+            // usuario_id puede venir como ObjectId o String
+            Object rawUser = doc.get("usuario_id");
+            if (rawUser instanceof ObjectId) {
+                venta.setUsuario_id(((ObjectId) rawUser).toHexString());
+            } else if (rawUser != null) {
+                venta.setUsuario_id(String.valueOf(rawUser));
+            } else {
+                venta.setUsuario_id(null);
+            }
+
+            Object rawTotal = doc.get("total");
+            venta.setTotal(rawTotal instanceof Number ? ((Number) rawTotal).doubleValue() : 0d);
+            venta.setStatus(doc.getString("status"));
+
+            List<VentaDetalle> listaDetalles = new ArrayList<>();
+            List<Document> detalles = (List<Document>) doc.get("detalle");
+            if (detalles != null) {
+                for (Document d : detalles) {
+                    VentaDetalle det = new VentaDetalle();
+
+                    Object rawProdId = d.get("producto_id");
+                    if (rawProdId instanceof ObjectId) {
+                        det.setProducto_id(((ObjectId) rawProdId).toHexString());
+                    } else if (rawProdId != null) {
+                        det.setProducto_id(String.valueOf(rawProdId));
+                    }
+
+                    det.setNombre(d.getString("nombre"));
+
+                    Object rawCant = d.get("cantidad");
+                    det.setCantidad(rawCant instanceof Number ? ((Number) rawCant).intValue() : 0);
+
+                    Object rawPU = d.get("precio_unitario");
+                    det.setPrecio_unitario(rawPU instanceof Number ? ((Number) rawPU).doubleValue() : 0d);
+
+                    Object rawSub = d.get("subtotal");
+                    det.setSubtotal(rawSub instanceof Number ? ((Number) rawSub).doubleValue() : 0d);
+
+                    listaDetalles.add(det);
+                }
+            }
+            venta.setDetalle(listaDetalles);
+            return venta;
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al buscar venta", e);
+            return null;
+        }
+    }
+
+    public void cerrarConexion() {
+        if (mongoClient != null) mongoClient.close();
     }
 }
