@@ -11,6 +11,9 @@
 </h:head>
 
 <h:body>
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{inventarioBean.onPreRenderView}" />
+    </f:metadata>
     <!-- Barra de Navegación Superior Unificada -->
     <div class="navbar">
         <div class="navbar-brand">
@@ -41,6 +44,8 @@
     </div>
 
     <main class="dashboard-container">
+        <h:messages globalOnly="false" layout="table" styleClass="messages-container" errorClass="message-error"
+            infoClass="message-info" />
         <div class="card-container">
             <div class="card">
                 <p>#{inventarioBean.inventarios.size()}</p>
@@ -61,30 +66,28 @@
         </div>
 
         <div class="table-container">
-            <div class="table-controls">
-                <div class="search-bar">
-                    <h:selectOneMenu value="#{inventarioBean.filtroBusqueda}" styleClass="form-input">
-                        <f:selectItem itemLabel="Producto" itemValue="productoId" />
-                        <f:selectItem itemLabel="Ubicación" itemValue="ubicacion" />
-                        <f:selectItem itemLabel="ID Inventario" itemValue="id" />
-                    </h:selectOneMenu>
-                    <h:inputText value="#{inventarioBean.terminoBusqueda}"
-                        placeholder="Escribe para buscar por el filtro seleccionado..." styleClass="form-input" />
-                    <h:commandButton value="Buscar" action="#{inventarioBean.buscarInventario}"
-                        styleClass="action-btn" />
-                </div>
-                <div class="action-buttons">
-                    <div class="movement-historial">
-                        <h:link value="Historial de Movimientos" outcome="detalle_inventarios.xhtml"
-                            styleClass="details-btn" />
+            <h:form id="controlForm">
+                <div class="table-controls">
+                    <div class="search-bar">
+                        <h:selectOneMenu value="#{inventarioBean.filtroBusqueda}" styleClass="form-input">
+                            <f:selectItem itemLabel="Producto" itemValue="producto" />
+                            <f:selectItem itemLabel="Ubicación" itemValue="ubicacion" />
+                            <f:selectItem itemLabel="ID Inventario" itemValue="id" />
+                        </h:selectOneMenu>
+                        <h:inputText value="#{inventarioBean.terminoBusqueda}"
+                            placeholder="Escribe para buscar por el filtro seleccionado..." styleClass="form-input" />
+                        <h:commandButton value="Buscar" action="#{inventarioBean.buscar}" styleClass="action-btn" />
                     </div>
-                    <div>
-                        <h:link value="Agregar Inventario" outcome="crear_inventario.xhtml" styleClass="details-btn" />
+                    <div class="action-buttons">
+                        <div>
+                            <h:link value="Agregar Inventario" outcome="crear_inventario.xhtml"
+                                styleClass="details-btn" />
+                        </div>
                     </div>
                 </div>
-            </div>
+            </h:form>
 
-            <h:form>
+            <h:form id="tableForm">
                 <table>
                     <thead>
                         <tr>
@@ -97,21 +100,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ui:repeat value="#{inventarioBean.inventarios}" var="inv">
+                        <ui:repeat value="#{inventarioBean.inventariosFiltrados}" var="inv">
                             <tr>
                                 <td>#{inv.id}</td>
-                                <td>#{inv.productoId}</td>
+                                <td>#{inventarioBean.nombreProductoDisplay(inv.productoId)}</td>
                                 <td>#{inv.stock}</td>
                                 <td>#{inv.minimo}</td>
                                 <td>
-                                    <span
-                                        class="status #{inv.stock == 0 ? 'out-stock' : (inv.stock &lt;= inv.minimo ? 'min-stock' : 'in-stock')}">
-                                        #{inv.stock == 0 ? 'Sin Stock' : (inv.stock &lt;= inv.minimo ? 'Stock Mínimo' :
-                                        'En Stock')}
+                                    <span class="status #{inventarioBean.estadoClass(inv)}">
+                                        #{inventarioBean.estadoLabel(inv)}
                                     </span>
                                 </td>
                                 <td>
-                                    <h:commandLink value="Ver Detalles" action="#{inventarioBean.verDetalle(inv.id)}"
+                                    <h:commandLink value="Ver Detalles" action="#{inventarioBean.verDetalles(inv.id)}"
                                         styleClass="details-btn">
                                         <f:param name="id" value="#{inv.id}" />
                                     </h:commandLink>

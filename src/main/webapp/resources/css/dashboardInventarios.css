@@ -13,6 +13,33 @@
     /* Deja espacio para el navbar fijo */
 }
 
+.messages-container {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.message-error {
+    background-color: #fee2e2;
+    border: 1px solid #ef4444;
+    color: #991b1b;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.message-info {
+    background-color: #dbeafe;
+    border: 1px solid #3b82f6;
+    color: #1e40af;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
 .card-container {
     display: flex;
     gap: 20px;
@@ -532,4 +559,34 @@
         font-size: 0.9rem;
         padding: 6px;
     }
+}
+
+/* Estado de stock: badges */
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.out-stock {
+    background-color: #ef4444;
+    /* rojo */
+    color: #fff;
+    border: 1px solid #dc2626;
+}
+
+.min-stock {
+    background-color: #f59e0b;
+    /* naranja */
+    color: #111827;
+    border: 1px solid #d97706;
+}
+
+.in-stock {
+    background-color: #10b981;
+    /* verde */
+    color: #fff;
+    border: 1px solid #059669;
 }
