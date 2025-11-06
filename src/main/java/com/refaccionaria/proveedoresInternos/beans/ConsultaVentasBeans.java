@@ -21,6 +21,8 @@ public class ConsultaVentasBeans implements Serializable {
     private Date fechaInicio;
     private Date fechaFin;
     private String estadoFiltro;
+    
+    private Venta ventaSeleccionada;
 
     public ConsultaVentasBeans() {
         this.listaVentas = new ArrayList<>();
@@ -61,6 +63,14 @@ public class ConsultaVentasBeans implements Serializable {
     public List<Venta> getListaVentas() {
         return listaVentas;
     }
+    
+    public void seleccionarVenta(Venta venta) {
+    this.ventaSeleccionada = venta;
+    
+    // Ejecutar JavaScript para mostrar el diálogo.
+    // El nombre 'PF' se usa para acceder a la API de PrimeFaces en JS.
+    org.primefaces.PrimeFaces.current().executeScript("PF('detalleVentaDialog').show()");
+}
 
     // Getters/Setters para los filtros (necesarios para los inputs del XHTML)
     public String getFolioBusqueda() { return folioBusqueda; }
@@ -70,5 +80,7 @@ public class ConsultaVentasBeans implements Serializable {
     public Date getFechaFin() { return fechaFin; }
     public void setFechaFin(Date fechaFin) { this.fechaFin = fechaFin; }
     public String getEstadoFiltro() { return estadoFiltro; }
-    public void setEstadoFiltro(String estadoFiltro) { this.estadoFiltro = estadoFiltro; }
+    public void setEstadoFiltro(String estadoFiltro) { this.estadoFiltro = estadoFiltro;}
+    public Venta getVentaSeleccionada() {return ventaSeleccionada;}
+    public void setVentaSeleccionada(Venta ventaSeleccionada) {this.ventaSeleccionada = ventaSeleccionada;}
 }
