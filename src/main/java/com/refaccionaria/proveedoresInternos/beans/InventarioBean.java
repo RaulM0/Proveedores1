@@ -10,19 +10,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import java.util.Optional;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 
 /**
- * Bean para manejar
- * inventarios: lista, alta, búsqueda y actualización por
+ * Bean para manejar inventarios: lista, alta, búsqueda y actualización por
  * venta/devolución.
  */
 @Named("inventarioBean")
@@ -37,8 +34,11 @@ public class InventarioBean implements Serializable {
     private List<Inventario> inventarios = new ArrayList<>();
     private List<Inventario> inventariosFiltrados = new ArrayList<>();
 
-    rivate Inventario inventarioActual=new Inventario();
+    private Inventario inventarioActual = new Inventario();
     private Inventario selectedInventario;
+
+    private String terminoBusqueda = "";
+    private String filtroBusqueda = "producto"; // valores posibles: producto, ubicacion, id
 
     @PostConstruct
     public void init() {
@@ -210,7 +210,7 @@ public class InventarioBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al eliminar",
                             "No se pudo eliminar el registro."));
-
+            e.printStackTrace();
         }
         actualizarFiltrados();
     }
@@ -634,7 +634,7 @@ public class InventarioBean implements Serializable {
 
     // --- Getters auxiliares para la vista de detalle ---
     public String getDetalleId() {
-    eturn selectedInventario != null ? selectedInventario.getId() : "";
+        return selectedInventario != null ? selectedInventario.getId() : "";
     }
 
     public String getDetalleUbicacion() {
@@ -650,7 +650,10 @@ public class InventarioBean implements Serializable {
     }
 
     public int getDetalleMaximo() {
+        return selectedInventario != null ? selectedInventario.getMaximo() : 0;
+    }
 
+    public String getDetalleNombre() {
         if (selectedInventario == null)
             return "";
         Producto p = buscarProducto(selectedInventario.getProductoId());
